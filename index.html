@@ -262,6 +262,7 @@ body.model .my-games-page {
   height: 20px;
   object-fit: contain;
   object-position: left center;
+  cursor: default;
 }
 
 .collapse {
@@ -384,9 +385,11 @@ body.sidebar-collapsed .logo {
   height: 20px;
   object-fit: cover;
   object-position: left center;
+  cursor: pointer;
 }
 
 body.sidebar-collapsed .collapse {
+  display: none;
   left: 44px;
   width: 20px;
   height: 20px;
@@ -1943,6 +1946,7 @@ const composer = document.querySelector(".composer");
 const promptInput = document.getElementById("promptInput");
 const promptChips = Array.from(document.querySelectorAll(".chip"));
 const collapseToggle = document.querySelector(".collapse");
+const sidebarLogo = document.querySelector(".sidebar > .logo");
 const hydratedViews = new Set(["home"]);
 let activeCard = 2;
 let isSidebarCollapsed = false;
@@ -2089,6 +2093,12 @@ if (collapseToggle) {
       event.preventDefault();
       setSidebarCollapsed(!isSidebarCollapsed);
     }
+  });
+}
+if (sidebarLogo) {
+  sidebarLogo.setAttribute("aria-label", "Expand sidebar");
+  sidebarLogo.addEventListener("click", () => {
+    if (isSidebarCollapsed) setSidebarCollapsed(false);
   });
 }
 promptInput.addEventListener("input", updatePromptState);
