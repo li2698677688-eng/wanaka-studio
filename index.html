@@ -13,6 +13,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Bitcount Grid Single Ink";
+  src: url("BitcountGridSingleInk.ttf") format("truetype");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -821,7 +829,7 @@ body.my-games .my-games-page {
 
 .my-games-title {
   color: #fff;
-  font-family: "Jersey 15", monospace;
+  font-family: "Bitcount Grid Single Ink", "Jersey 15", monospace;
   font-size: 28px;
   font-style: normal;
   font-weight: 400;
@@ -937,12 +945,24 @@ body.my-games .my-games-page {
   font-size: 12px;
   font-weight: 400;
   line-height: 12px;
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 
-.filter-chip.active {
+.filter-chip.active,
+.filter-chip[aria-pressed="true"] {
   color: #fff;
   border-radius: 46px;
+  background: rgba(255, 255, 255, .08);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
+}
+
+.filter-chip:hover {
+  color: rgba(255, 255, 255, .82);
+  transform: translateY(-1px);
+}
+
+.is-hidden-by-filter {
+  display: none !important;
 }
 
 .my-games-grid {
@@ -1010,7 +1030,7 @@ body.model .model-page {
 
 .model-title {
   color: #fff;
-  font-family: "Jersey 15", monospace;
+  font-family: "Bitcount Grid Single Ink", "Jersey 15", monospace;
   font-size: 36px;
   font-style: normal;
   font-weight: 400;
@@ -2320,6 +2340,10 @@ const detailHero = document.getElementById("detailHero");
 const detailTitle = document.getElementById("detailTitle");
 const detailSubtitle = document.getElementById("detailSubtitle");
 const relatedRow = document.getElementById("relatedRow");
+const filterGroups = Array.from(document.querySelectorAll(".filters"));
+const modelTabs = Array.from(document.querySelectorAll(".model-tab"));
+const modelSectionTitle = document.querySelector(".model-section-title");
+const modelModeOption = document.querySelector(".model-option");
 const hydratedViews = new Set(["home"]);
 let activeCard = 2;
 let isSidebarCollapsed = false;
@@ -2426,6 +2450,48 @@ function closeGameDetail() {
   document.body.classList.remove("detail-open");
 }
 
+function setupFilterGroup(group) {
+  const chips = Array.from(group.querySelectorAll(".filter-chip"));
+  const contentArea = group.closest(".my-games-content, .model-section");
+  const items = Array.from(contentArea?.querySelectorAll(".game-tile, .model-card") || []);
+  if (!chips.length || !items.length) return;
+
+  chips.forEach((chip, index) => {
+    chip.setAttribute("aria-pressed", chip.classList.contains("active") ? "true" : "false");
+    chip.addEventListener("click", () => {
+      chips.forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-pressed", "false");
+      });
+      chip.classList.add("active");
+      chip.setAttribute("aria-pressed", "true");
+
+      const categoryCount = Math.max(chips.length - 1, 1);
+      items.forEach((item, itemIndex) => {
+        const shouldShow = index === 0 || itemIndex % categoryCount === index - 1;
+        item.classList.toggle("is-hidden-by-filter", !shouldShow);
+      });
+    });
+  });
+}
+
+function setupModelTabs() {
+  if (!modelTabs.length) return;
+  modelTabs.forEach((tab) => {
+    tab.setAttribute("aria-pressed", tab.classList.contains("is-selected") ? "true" : "false");
+    tab.addEventListener("click", () => {
+      modelTabs.forEach((item) => {
+        item.classList.remove("is-selected");
+        item.setAttribute("aria-pressed", "false");
+      });
+      tab.classList.add("is-selected");
+      tab.setAttribute("aria-pressed", "true");
+      if (modelSectionTitle) modelSectionTitle.textContent = tab.textContent.trim();
+      if (modelModeOption) modelModeOption.textContent = `${tab.textContent.trim()} Generation`;
+    });
+  });
+}
+
 function hydrateViewImages(view) {
   if (hydratedViews.has(view)) return;
   const page = document.querySelector(`.${view}-page`);
@@ -2530,6 +2596,8 @@ if (sidebarLogo) {
     if (isSidebarCollapsed) setSidebarCollapsed(false);
   });
 }
+filterGroups.forEach(setupFilterGroup);
+setupModelTabs();
 promptInput.addEventListener("input", updatePromptState);
 promptChips.forEach((chip) => {
   chip.addEventListener("click", () => {
