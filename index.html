@@ -1053,14 +1053,31 @@ body.model .model-page {
   background: rgba(255, 255, 255, .04);
 }
 
-.model-input-placeholder {
+.model-input {
   position: absolute;
   left: 16px;
   top: 16px;
+  right: 16px;
+  bottom: 58px;
+  width: auto;
+  min-height: 72px;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
   color: rgba(255, 255, 255, .4);
+  font: inherit;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
+}
+
+.model-input::placeholder {
+  color: rgba(255, 255, 255, .4);
+}
+
+.model-composer.has-value .model-input {
+  color: #fff;
 }
 
 .model-options {
@@ -1087,6 +1104,11 @@ body.model .model-page {
   font-weight: 400;
   line-height: 14px;
   white-space: nowrap;
+}
+
+.model-option.is-open {
+  background: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .18);
 }
 
 .model-option::after {
@@ -1136,6 +1158,7 @@ body.model .model-page {
   height: 32px;
   border-radius: 50%;
   background: rgba(255, 255, 255, .1);
+  transition: background .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 
 .model-send img {
@@ -1143,6 +1166,45 @@ body.model .model-page {
   height: 16px;
   transform: rotate(90deg);
   opacity: .5;
+}
+
+.model-composer.has-value .model-send {
+  background: #c0f000;
+  box-shadow: 0 2px 0 #a6d900;
+}
+
+.model-composer.has-value .model-send img {
+  opacity: 1;
+  filter: brightness(0) saturate(100%) invert(18%) sepia(28%) saturate(1288%) hue-rotate(24deg) brightness(91%) contrast(101%);
+}
+
+.model-option-menu {
+  position: fixed;
+  z-index: 120;
+  min-width: 178px;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(30, 20, 18, .96);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .32);
+}
+
+.model-option-choice {
+  width: 100%;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, .78);
+  font-size: 12px;
+  text-align: left;
+}
+
+.model-option-choice:hover,
+.model-option-choice.is-selected {
+  color: #fff;
+  background: rgba(255, 255, 255, .1);
 }
 
 .model-section {
@@ -1846,8 +1908,10 @@ body.detail-open {
     padding: 16px;
   }
 
-  .model-input-placeholder {
+  .model-input {
     position: static;
+    width: 100%;
+    min-height: 86px;
     padding-right: 4px;
     font-size: 15px;
     line-height: 22px;
@@ -2155,16 +2219,16 @@ body.detail-open {
     <section class="model-hero" aria-label="Model generator">
       <h1 class="model-title">One-Click Generate Any <span class="accent">3D Content</span></h1>
       <div class="model-composer">
-        <div class="model-input-placeholder">Describe the model you want to generate</div>
+        <textarea class="model-input" id="modelPrompt" placeholder="Describe the model you want to generate" rows="3"></textarea>
         <div class="model-options">
-          <button class="model-option" type="button">Model Generation</button>
-          <button class="model-option" type="button">Tripo Official API</button>
-          <button class="model-option" type="button">v3.0-20250812</button>
-          <button class="model-option" type="button">Unlimited Polys</button>
+          <button class="model-option" type="button" data-option="mode">Model Generation</button>
+          <button class="model-option" type="button" data-option="provider">Tripo Official API</button>
+          <button class="model-option" type="button" data-option="version">v3.0-20250812</button>
+          <button class="model-option" type="button" data-option="quality">Unlimited Polys</button>
         </div>
         <div class="model-actions">
           <button class="model-circle" type="button" aria-label="Add"></button>
-          <button class="model-send" type="button" aria-label="Generate"><img src="assets/icon_fashe1.webp" alt=""></button>
+          <button class="model-send" type="button" aria-label="Generate" aria-disabled="true"><img src="assets/icon_fashe1.webp" alt=""></button>
         </div>
       </div>
     </section>
@@ -2341,6 +2405,10 @@ const filterGroups = Array.from(document.querySelectorAll(".filters"));
 const modelTabs = Array.from(document.querySelectorAll(".model-tab"));
 const modelSectionTitle = document.querySelector(".model-section-title");
 const modelModeOption = document.querySelector(".model-option");
+const modelComposer = document.querySelector(".model-composer");
+const modelPrompt = document.getElementById("modelPrompt");
+const modelSend = document.querySelector(".model-send");
+const modelOptions = Array.from(document.querySelectorAll(".model-option"));
 const hydratedViews = new Set(["home"]);
 let activeCard = 2;
 let isSidebarCollapsed = false;
@@ -2389,6 +2457,13 @@ function updateCarousel(nextActive) {
 function updatePromptState() {
   if (!composer || !promptInput) return;
   composer.classList.toggle("has-value", promptInput.value.trim().length > 0);
+}
+
+function updateModelPromptState() {
+  if (!modelComposer || !modelPrompt || !modelSend) return;
+  const hasValue = modelPrompt.value.trim().length > 0;
+  modelComposer.classList.toggle("has-value", hasValue);
+  modelSend.setAttribute("aria-disabled", hasValue ? "false" : "true");
 }
 
 function resolveImageSrc(img) {
@@ -2485,6 +2560,69 @@ function setupModelTabs() {
       tab.setAttribute("aria-pressed", "true");
       if (modelSectionTitle) modelSectionTitle.textContent = tab.textContent.trim();
       if (modelModeOption) modelModeOption.textContent = `${tab.textContent.trim()} Generation`;
+    });
+  });
+}
+
+const modelOptionChoices = {
+  mode: ["Model Generation", "Text to 3D", "Image to 3D", "Scene Builder"],
+  provider: ["Tripo Official API", "Wanaka Fast API", "Wanaka Detail API", "Local Preview"],
+  version: ["v3.0-20250812", "v2.5 Stable", "v4.0 Preview", "Legacy Lite"],
+  quality: ["Unlimited Polys", "Game Ready", "Low Poly", "Ultra Detail"],
+};
+
+let activeModelOption = null;
+let modelOptionMenu = null;
+
+function closeModelOptionMenu() {
+  if (modelOptionMenu) {
+    modelOptionMenu.remove();
+    modelOptionMenu = null;
+  }
+  if (activeModelOption) {
+    activeModelOption.classList.remove("is-open");
+    activeModelOption.setAttribute("aria-expanded", "false");
+    activeModelOption = null;
+  }
+}
+
+function openModelOptionMenu(optionButton) {
+  closeModelOptionMenu();
+  const key = optionButton.dataset.option;
+  const choices = modelOptionChoices[key] || ["Option A", "Option B", "Option C"];
+  const rect = optionButton.getBoundingClientRect();
+  activeModelOption = optionButton;
+  optionButton.classList.add("is-open");
+  optionButton.setAttribute("aria-expanded", "true");
+
+  modelOptionMenu = document.createElement("div");
+  modelOptionMenu.className = "model-option-menu";
+  modelOptionMenu.style.left = `${Math.max(12, Math.min(rect.left, window.innerWidth - 196))}px`;
+  modelOptionMenu.style.top = `${rect.bottom + 8}px`;
+  modelOptionMenu.innerHTML = choices.map((choice) => `
+    <button class="model-option-choice${choice === optionButton.textContent.trim() ? " is-selected" : ""}" type="button">${choice}</button>
+  `).join("");
+
+  modelOptionMenu.querySelectorAll(".model-option-choice").forEach((choiceButton) => {
+    choiceButton.addEventListener("click", () => {
+      optionButton.textContent = choiceButton.textContent.trim();
+      closeModelOptionMenu();
+    });
+  });
+  document.body.appendChild(modelOptionMenu);
+}
+
+function setupModelOptions() {
+  modelOptions.forEach((optionButton) => {
+    optionButton.setAttribute("aria-haspopup", "listbox");
+    optionButton.setAttribute("aria-expanded", "false");
+    optionButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (activeModelOption === optionButton) {
+        closeModelOptionMenu();
+        return;
+      }
+      openModelOptionMenu(optionButton);
     });
   });
 }
@@ -2595,6 +2733,9 @@ if (sidebarLogo) {
 }
 filterGroups.forEach(setupFilterGroup);
 setupModelTabs();
+setupModelOptions();
+modelPrompt?.addEventListener("input", updateModelPromptState);
+updateModelPromptState();
 promptInput.addEventListener("input", updatePromptState);
 promptChips.forEach((chip) => {
   chip.addEventListener("click", () => {
@@ -2632,7 +2773,13 @@ detailClose?.addEventListener("click", closeGameDetail);
 gameDetail?.addEventListener("click", (event) => {
   if (event.target === gameDetail) closeGameDetail();
 });
+document.addEventListener("click", (event) => {
+  if (!modelOptionMenu) return;
+  if (modelOptionMenu.contains(event.target) || activeModelOption?.contains(event.target)) return;
+  closeModelOptionMenu();
+});
 window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeModelOptionMenu();
   if (event.key === "Escape") closeGameDetail();
 });
 window.addEventListener("resize", fitCanvas);
