@@ -1304,15 +1304,14 @@ body.model .model-page {
 }
 
 .game-detail {
-  --detail-sheet-height: min(84vh, 848px);
-  --detail-sheet-top: calc(100vh - var(--detail-sheet-height));
+  --detail-sheet-top: 260px;
+  --detail-sheet-padding-x: max(24px, calc((100vw - 720px) / 2));
   position: fixed;
   inset: 0;
   z-index: 80;
   display: none;
-  overflow-y: auto;
+  overflow: hidden;
   background: rgba(0, 0, 0, .54);
-  padding: calc(var(--detail-sheet-top) + 36px) max(24px, calc((100vw - 720px) / 2)) 56px;
 }
 
 .game-detail.is-open {
@@ -1320,30 +1319,33 @@ body.model .model-page {
 }
 
 .game-detail-panel {
-  position: relative;
-  width: min(720px, 100%);
-  min-height: 920px;
-  margin: 0 auto;
-  padding: 0 0 48px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--detail-sheet-top);
+  bottom: 0;
+  width: 100%;
+  margin: 0;
+  padding: 36px var(--detail-sheet-padding-x) 48px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  background: #150c0a;
+  border-radius: 24px 24px 0 0;
   color: #fff;
 }
 
-.game-detail-panel::before {
-  content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  height: var(--detail-sheet-height);
-  background: #150c0a;
-  border-radius: 24px 24px 0 0;
+.game-detail-panel > :not(.detail-close) {
+  width: min(720px, 100%);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .detail-close {
   position: fixed;
   left: 24px;
-  top: calc(var(--detail-sheet-top) + 18px + env(safe-area-inset-top));
+  top: calc(var(--detail-sheet-top) + 18px);
   z-index: 2;
   width: 44px;
   height: 44px;
@@ -1898,18 +1900,13 @@ body.detail-open {
   }
 
   .game-detail {
-    --detail-sheet-height: calc(100vh - 72px);
     --detail-sheet-top: 72px;
-    padding: calc(var(--detail-sheet-top) + 24px) 16px 86px;
+    --detail-sheet-padding-x: 16px;
   }
 
   .game-detail-panel {
-    min-height: auto;
-    padding: 0 0 34px;
-  }
-
-  .game-detail-panel::before {
-    height: calc(100vh - 72px);
+    padding-top: 24px;
+    padding-bottom: 86px;
     border-radius: 22px 22px 0 0;
   }
 
