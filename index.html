@@ -1227,6 +1227,307 @@ body.model .model-page {
     width: calc(100vw - 208px);
   }
 }
+
+@media (max-width: 700px) {
+  html,
+  body {
+    min-width: 320px;
+  }
+
+  .viewport {
+    min-height: var(--home-viewport-height, 1240px);
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  body.my-games .viewport,
+  body.model .viewport {
+    min-height: 100vh;
+    background-size: auto 360px;
+  }
+
+  .sidebar {
+    left: 0;
+    top: auto;
+    bottom: 0;
+    z-index: 50;
+    width: 100%;
+    height: calc(68px + env(safe-area-inset-bottom));
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 6px;
+    background: rgba(13, 8, 7, .94);
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, .12) inset;
+  }
+
+  .sidebar > .logo,
+  .collapse,
+  .profile {
+    display: none;
+  }
+
+  .nav-item,
+  .nav-item.home,
+  .nav-item.games,
+  .nav-item.model {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    height: 50px;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 14px;
+    font-size: 11px;
+    line-height: 12px;
+  }
+
+  .nav-item.is-active {
+    background: rgba(255, 255, 255, .08);
+  }
+
+  .nav-item img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .canvas {
+    height: 1120px;
+  }
+
+  .chip {
+    display: none;
+  }
+
+  .composer-input {
+    font-size: 28px;
+    line-height: 34px;
+  }
+
+  .plus-circle {
+    width: 52px;
+    height: 52px;
+  }
+
+  .plus-circle::before,
+  .plus-circle::after {
+    width: 18px;
+    height: 2px;
+  }
+
+  .create {
+    width: 132px;
+    height: 52px;
+    font-size: 22px;
+    line-height: 22px;
+  }
+
+  .create::before {
+    font-size: 28px;
+  }
+
+  .feed {
+    left: 0;
+    width: 100%;
+    max-width: none;
+    min-height: 620px;
+    padding: 22px 16px 100px;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .feed-header {
+    height: auto;
+  }
+
+  .feed-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .feed-row,
+  .my-games-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+  }
+
+  .game-tile,
+  .my-games-grid .game-tile {
+    width: 100%;
+    min-width: 0;
+    flex: none;
+    margin-bottom: 0;
+  }
+
+  .black-cartridge {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 233 / 146;
+  }
+
+  .black-cartridge > img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .thumbnail {
+    left: 3.43%;
+    top: 10.96%;
+    width: 93.13%;
+    height: 80.82%;
+    border-radius: 5px;
+  }
+
+  .tile-meta {
+    margin-top: 8px;
+  }
+
+  .tile-name {
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .tile-sub {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .my-games-page,
+  .model-page {
+    margin-left: 0;
+    padding: 24px 16px 100px;
+  }
+
+  .my-games-top {
+    gap: 18px;
+  }
+
+  .my-games-title {
+    font-size: 26px;
+    line-height: 32px;
+  }
+
+  .my-games-actions {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .search-pill {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .create-game {
+    height: 40px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .filters {
+    width: calc(100vw - 32px);
+    gap: 8px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chip {
+    flex: 0 0 auto;
+    height: 34px;
+    padding: 6px 14px;
+  }
+
+  .my-games-grid {
+    margin-top: 22px;
+  }
+
+  .model-tabs {
+    margin: 0 auto;
+  }
+
+  .model-hero {
+    margin-top: 36px;
+  }
+
+  .model-title {
+    max-width: 340px;
+    font-size: 28px;
+    line-height: 30px;
+  }
+
+  .model-composer {
+    width: 100%;
+    min-height: 224px;
+    height: auto;
+    margin-top: 24px;
+    padding: 16px;
+  }
+
+  .model-input-placeholder {
+    position: static;
+    padding-right: 4px;
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .model-options {
+    position: static;
+    margin-top: 70px;
+    padding-right: 0;
+    gap: 8px;
+  }
+
+  .model-option {
+    max-width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .model-actions {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .model-section {
+    margin-top: 38px;
+  }
+
+  .model-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 12px;
+  }
+
+  .model-card {
+    width: 100%;
+    min-width: 0;
+    flex: none;
+  }
+
+  .model-preview {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .model-object {
+    width: 68%;
+    height: 68%;
+  }
+}
 </style>
 </head>
 <body>
@@ -1623,6 +1924,25 @@ function fitCanvas() {
   const designW = 1920;
   const designH = 888;
   const sidebarW = 160;
+  const isMobile = vw <= 700;
+
+  if (isMobile) {
+    const scale = Math.min(Math.max((vw - 24) / 740, .43), .72);
+    const visualCenterX = 960;
+    const left = (vw / 2) - (visualCenterX * scale);
+    const top = 18;
+    const composerBottom = top + (701 + 120) * scale;
+    const feedTop = Math.ceil(composerBottom + 28);
+    const viewportHeight = Math.max(1180, feedTop + 690);
+
+    document.documentElement.style.setProperty("--scale", scale.toFixed(5));
+    document.documentElement.style.setProperty("--canvas-left", `${left}px`);
+    document.documentElement.style.setProperty("--canvas-top", `${top}px`);
+    document.documentElement.style.setProperty("--feed-top", `${feedTop}px`);
+    document.documentElement.style.setProperty("--home-viewport-height", `${viewportHeight}px`);
+    return;
+  }
+
   const contentW = designW - sidebarW;
   const viewportContentW = Math.max(vw - sidebarW, 1);
   const contentCenterX = sidebarW + (designW - sidebarW) / 2;
