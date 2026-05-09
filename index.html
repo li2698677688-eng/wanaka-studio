@@ -106,19 +106,20 @@ body.model .my-games-page {
   left: 0;
   top: 0;
   z-index: 10;
-  width: 160px;
+  width: var(--sidebar-width, 160px);
   height: 100vh;
   background: rgba(0, 0, 0, .16);
   box-shadow: -1px 0 0 rgba(255, 255, 255, .12) inset;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  transition: width .24s ease, background-color .24s ease;
 }
 
 .feed {
   position: absolute;
-  left: 160px;
+  left: var(--sidebar-width, 160px);
   top: var(--feed-top, 760px);
-  width: calc(100vw - 160px);
+  width: calc(100vw - var(--sidebar-width, 160px));
   max-width: 1760px;
   min-height: 740px;
   padding: 20px 40px;
@@ -271,6 +272,12 @@ body.model .my-games-page {
   height: 24px;
   opacity: .4;
   transform: rotate(180deg);
+  cursor: pointer;
+  transition: left .24s ease, opacity .2s ease, transform .24s ease;
+}
+
+.collapse:hover {
+  opacity: .75;
 }
 
 .nav-item {
@@ -365,6 +372,80 @@ body.model .my-games-page {
   height: 12px;
   margin-left: 10px;
   opacity: .4;
+}
+
+body.sidebar-collapsed .sidebar {
+  background: rgba(0, 0, 0, .24);
+}
+
+body.sidebar-collapsed .logo {
+  left: 24px;
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  object-position: left center;
+}
+
+body.sidebar-collapsed .collapse {
+  left: 44px;
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  transform: none;
+}
+
+body.sidebar-collapsed .collapse:hover {
+  opacity: .35;
+}
+
+body.sidebar-collapsed .nav-item,
+body.sidebar-collapsed .nav-item.home,
+body.sidebar-collapsed .nav-item.games,
+body.sidebar-collapsed .nav-item.model {
+  left: 0;
+  width: 68px;
+  height: 20px;
+  justify-content: center;
+  gap: 0;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+}
+
+body.sidebar-collapsed .nav-item.home {
+  top: 94px;
+}
+
+body.sidebar-collapsed .nav-item.games {
+  top: 138px;
+}
+
+body.sidebar-collapsed .nav-item.model {
+  top: 182px;
+}
+
+body.sidebar-collapsed .nav-item img {
+  width: 20px;
+  height: 20px;
+}
+
+body.sidebar-collapsed .profile {
+  left: 20px;
+  width: 28px;
+  gap: 0;
+}
+
+body.sidebar-collapsed .profile > div:not(.profile-avatar),
+body.sidebar-collapsed .profile-arrow {
+  display: none;
+}
+
+body.sidebar-collapsed .profile-avatar img {
+  width: 118px;
+  height: auto;
+  object-fit: contain;
+  object-position: left center;
+  transform: translateX(0);
 }
 
 .cards-fade {
@@ -680,7 +761,7 @@ body.model .my-games-page {
   position: relative;
   display: none;
   min-height: 100vh;
-  margin-left: 160px;
+  margin-left: var(--sidebar-width, 160px);
   padding: 76px 40px 64px;
   overflow: hidden;
   background: transparent;
@@ -878,7 +959,7 @@ body.my-games .my-games-page {
   position: relative;
   display: none;
   min-height: 1000px;
-  margin-left: 160px;
+  margin-left: var(--sidebar-width, 160px);
   padding: 20px 40px 64px;
   overflow: visible;
   background: transparent;
@@ -1259,6 +1340,10 @@ body.model .model-page {
     gap: 6px;
     background: rgba(13, 8, 7, .94);
     box-shadow: 0 -1px 0 rgba(255, 255, 255, .12) inset;
+  }
+
+  body.sidebar-collapsed .sidebar {
+    width: 100%;
   }
 
   .sidebar > .logo,
@@ -1857,8 +1942,10 @@ const carouselCards = Array.from(document.querySelectorAll(".card[data-card]"));
 const composer = document.querySelector(".composer");
 const promptInput = document.getElementById("promptInput");
 const promptChips = Array.from(document.querySelectorAll(".chip"));
+const collapseToggle = document.querySelector(".collapse");
 const hydratedViews = new Set(["home"]);
 let activeCard = 2;
+let isSidebarCollapsed = false;
 
 const cardSlots = {
   "-2": { left: 512, top: 520, width: 149.2, height: 93.6, opacity: .62, z: 2 },
@@ -1923,7 +2010,6 @@ function fitCanvas() {
   const vh = window.innerHeight;
   const designW = 1920;
   const designH = 888;
-  const sidebarW = 160;
   const isMobile = vw <= 700;
 
   if (isMobile) {
@@ -1940,9 +2026,11 @@ function fitCanvas() {
     document.documentElement.style.setProperty("--canvas-top", `${top}px`);
     document.documentElement.style.setProperty("--feed-top", `${feedTop}px`);
     document.documentElement.style.setProperty("--home-viewport-height", `${viewportHeight}px`);
+    document.documentElement.style.setProperty("--sidebar-width", "0px");
     return;
   }
 
+  const sidebarW = isSidebarCollapsed ? 68 : 160;
   const contentW = designW - sidebarW;
   const viewportContentW = Math.max(vw - sidebarW, 1);
   const contentCenterX = sidebarW + (designW - sidebarW) / 2;
@@ -1958,6 +2046,17 @@ function fitCanvas() {
   document.documentElement.style.setProperty("--canvas-top", `${top}px`);
   document.documentElement.style.setProperty("--feed-top", `${feedTop}px`);
   document.documentElement.style.setProperty("--home-viewport-height", `${viewportHeight}px`);
+  document.documentElement.style.setProperty("--sidebar-width", `${sidebarW}px`);
+}
+
+function setSidebarCollapsed(collapsed) {
+  isSidebarCollapsed = collapsed;
+  document.body.classList.toggle("sidebar-collapsed", collapsed);
+  if (collapseToggle) {
+    collapseToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+    collapseToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  }
+  fitCanvas();
 }
 
 function setView(view) {
@@ -1981,6 +2080,17 @@ function setView(view) {
 navHome.addEventListener("click", () => setView("home"));
 navGames.addEventListener("click", () => setView("my-games"));
 navModel.addEventListener("click", () => setView("model"));
+if (collapseToggle) {
+  collapseToggle.setAttribute("role", "button");
+  collapseToggle.setAttribute("tabindex", "0");
+  collapseToggle.addEventListener("click", () => setSidebarCollapsed(!isSidebarCollapsed));
+  collapseToggle.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setSidebarCollapsed(!isSidebarCollapsed);
+    }
+  });
+}
 promptInput.addEventListener("input", updatePromptState);
 promptChips.forEach((chip) => {
   chip.addEventListener("click", () => {
