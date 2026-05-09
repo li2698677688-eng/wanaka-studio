@@ -990,6 +990,19 @@ body.my-games .my-games-page {
   contain-intrinsic-size: 1000px;
 }
 
+body.model.model-rigging .viewport {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 52% 42%, rgba(255, 255, 255, .08), transparent 28%),
+    linear-gradient(180deg, #140e10 0%, #3d393a 100%);
+}
+
+body.model.model-rigging .model-page {
+  min-height: 100vh;
+  padding: 24px 300px 24px 300px;
+  overflow: hidden;
+}
+
 body.model .model-page {
   display: block;
 }
@@ -1019,6 +1032,16 @@ body.model .model-page {
 .model-tab.is-selected {
   color: #fff;
   background: rgba(255, 255, 255, .1);
+}
+
+.model-generator-view,
+.rigging-view {
+  display: none;
+}
+
+.model-page[data-mode="model"] .model-generator-view,
+.model-page[data-mode="rigging"] .rigging-view {
+  display: block;
 }
 
 .model-hero {
@@ -1363,6 +1386,386 @@ body.model .model-page {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.rigging-view {
+  min-height: calc(100vh - 48px);
+}
+
+.rigging-panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 260px;
+  padding: 20px 16px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, .24);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, .12);
+}
+
+.rigging-left {
+  left: var(--sidebar-width, 160px);
+}
+
+.rigging-right {
+  right: 0;
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, .12);
+}
+
+.rigging-section {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.rigging-section:last-child {
+  border-bottom: 0;
+}
+
+.rigging-heading {
+  margin-bottom: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.rigging-upload,
+.rigging-file,
+.rigging-action,
+.animation-card,
+.rigging-progress {
+  width: 228px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, .06);
+}
+
+.rigging-upload {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.rigging-plus {
+  font-size: 30px;
+  line-height: 24px;
+}
+
+.rigging-muted {
+  color: rgba(255, 255, 255, .4);
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.rigging-file {
+  height: 100px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+}
+
+.rigging-file-thumb {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, #ffd739 0 34%, transparent 34%),
+    linear-gradient(45deg, #f05a22 0 45%, #a82212 45% 100%);
+  box-shadow: inset -8px -8px 0 rgba(0, 0, 0, .16);
+}
+
+.rigging-file-name,
+.rigging-action {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+.rigging-action {
+  min-height: 40px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.rigging-action.is-selected,
+.animation-card.is-selected {
+  background: rgba(255, 255, 255, .16);
+  border-color: rgba(255, 255, 255, .5);
+}
+
+.rigging-icon {
+  width: 22px;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.rigging-progress {
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.rigging-progress-top {
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.rigging-progress-bar {
+  height: 4px;
+  margin-top: 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .1);
+  overflow: hidden;
+}
+
+.rigging-progress-bar span {
+  display: block;
+  width: 64%;
+  height: 100%;
+  border-radius: inherit;
+  background: #fff;
+}
+
+.rigging-stage {
+  min-height: calc(100vh - 48px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rigging-character {
+  position: relative;
+  width: 321px;
+  height: 482px;
+  transform: translateY(-18px);
+  filter: drop-shadow(0 24px 34px rgba(0, 0, 0, .32));
+}
+
+.rig-head,
+.rig-body,
+.rig-arm,
+.rig-hand,
+.rig-leg,
+.rig-foot,
+.rig-hair {
+  position: absolute;
+}
+
+.rig-head {
+  left: 104px;
+  top: 62px;
+  width: 112px;
+  height: 98px;
+  border-radius: 32px 32px 38px 38px;
+  background: linear-gradient(145deg, #ffd21c, #f3a700);
+}
+
+.rig-hair {
+  left: 95px;
+  top: 40px;
+  width: 126px;
+  height: 58px;
+  border-radius: 36px 36px 18px 18px;
+  background: linear-gradient(145deg, #1c2425, #050707);
+}
+
+.rig-hair::after {
+  content: "";
+  position: absolute;
+  right: -26px;
+  top: -8px;
+  width: 52px;
+  height: 46px;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.rig-eye {
+  position: absolute;
+  top: 112px;
+  width: 10px;
+  height: 16px;
+  border-radius: 50%;
+  background: #111;
+}
+
+.rig-eye.left {
+  left: 132px;
+}
+
+.rig-eye.right {
+  left: 177px;
+}
+
+.rig-mouth {
+  position: absolute;
+  left: 150px;
+  top: 140px;
+  width: 28px;
+  height: 10px;
+  border-top: 4px solid #7b1d18;
+  border-radius: 50%;
+}
+
+.rig-body {
+  left: 88px;
+  top: 166px;
+  width: 145px;
+  height: 140px;
+  border-radius: 34px 34px 14px 14px;
+  background: linear-gradient(145deg, #9d510e, #6d3306);
+}
+
+.rig-body::before {
+  content: "";
+  position: absolute;
+  left: 42px;
+  top: 0;
+  width: 62px;
+  height: 30px;
+  border-radius: 0 0 30px 30px;
+  background: #dd2d20;
+}
+
+.rig-arm {
+  top: 188px;
+  width: 52px;
+  height: 126px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #9d510e, #6d3306);
+}
+
+.rig-arm.left {
+  left: 48px;
+  transform: rotate(18deg);
+}
+
+.rig-arm.right {
+  right: 48px;
+  transform: rotate(-12deg);
+}
+
+.rig-hand {
+  top: 296px;
+  width: 42px;
+  height: 42px;
+  border: 13px solid #ffc400;
+  border-top-color: transparent;
+  border-radius: 50%;
+}
+
+.rig-hand.left {
+  left: 38px;
+  transform: rotate(28deg);
+}
+
+.rig-hand.right {
+  right: 37px;
+  transform: rotate(-30deg);
+}
+
+.rig-leg {
+  top: 304px;
+  width: 62px;
+  height: 124px;
+  background: linear-gradient(145deg, #005cc8, #003f8f);
+}
+
+.rig-leg.left {
+  left: 96px;
+  border-radius: 0 0 12px 12px;
+}
+
+.rig-leg.right {
+  left: 160px;
+  border-radius: 0 0 12px 12px;
+}
+
+.rig-foot {
+  top: 410px;
+  width: 74px;
+  height: 36px;
+  border-radius: 8px;
+  background: #005abf;
+}
+
+.rig-foot.left {
+  left: 84px;
+}
+
+.rig-foot.right {
+  left: 160px;
+}
+
+.rigging-player {
+  position: fixed;
+  left: calc((100vw + var(--sidebar-width, 160px)) / 2);
+  bottom: 28px;
+  transform: translateX(-50%);
+  height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 24px;
+  background: #140e10;
+}
+
+.rigging-player button {
+  min-width: 60px;
+  height: 54px;
+  padding: 0 18px;
+  border-radius: 18px;
+  color: rgba(255, 255, 255, .5);
+  font-size: 20px;
+}
+
+.rigging-player .is-selected,
+.rigging-player .play {
+  color: #fff;
+  background: rgba(255, 255, 255, .08);
+  font-weight: 500;
+}
+
+.animation-list {
+  display: grid;
+  gap: 12px;
+}
+
+.animation-card {
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.animation-card .rigging-icon {
+  width: auto;
+  font-size: 28px;
+  line-height: 26px;
 }
 
 .game-detail {
@@ -1963,6 +2366,58 @@ body.detail-open {
     height: 68%;
   }
 
+  body.model.model-rigging .model-page {
+    min-height: auto;
+    padding: 24px 16px 120px;
+    overflow: visible;
+  }
+
+  .rigging-view {
+    min-height: auto;
+    padding-top: 24px;
+  }
+
+  .rigging-panel,
+  .rigging-left,
+  .rigging-right {
+    position: static;
+    width: 100%;
+    padding: 16px;
+    margin-top: 16px;
+    border-radius: 16px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+  }
+
+  .rigging-upload,
+  .rigging-file,
+  .rigging-action,
+  .animation-card,
+  .rigging-progress {
+    width: 100%;
+  }
+
+  .rigging-stage {
+    min-height: 460px;
+    order: -1;
+  }
+
+  .rigging-character {
+    transform: scale(.78);
+  }
+
+  .rigging-player {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-top: 16px;
+    transform: none;
+    overflow-x: auto;
+  }
+
+  .rigging-player button {
+    flex: 0 0 auto;
+  }
+
   .game-detail {
     --detail-sheet-top: 72px;
     --detail-sheet-padding-x: 16px;
@@ -2210,41 +2665,42 @@ body.detail-open {
     </div>
   </section>
 
-  <section class="model-page" aria-label="Model page">
+  <section class="model-page" aria-label="Model page" data-mode="model">
     <div class="model-tabs" aria-label="Model modes">
-      <button class="model-tab is-selected" type="button">Model</button>
-      <button class="model-tab" type="button">Rigging</button>
+      <button class="model-tab is-selected" type="button" data-mode="model">Model</button>
+      <button class="model-tab" type="button" data-mode="rigging">Rigging</button>
     </div>
 
-    <section class="model-hero" aria-label="Model generator">
-      <h1 class="model-title">One-Click Generate Any <span class="accent">3D Content</span></h1>
-      <div class="model-composer">
-        <textarea class="model-input" id="modelPrompt" placeholder="Describe the model you want to generate" rows="3"></textarea>
-        <div class="model-options">
-          <button class="model-option" type="button" data-option="mode">Model Generation</button>
-          <button class="model-option" type="button" data-option="provider">Tripo Official API</button>
-          <button class="model-option" type="button" data-option="version">v3.0-20250812</button>
-          <button class="model-option" type="button" data-option="quality">Unlimited Polys</button>
+    <div class="model-generator-view">
+      <section class="model-hero" aria-label="Model generator">
+        <h1 class="model-title">One-Click Generate Any <span class="accent">3D Content</span></h1>
+        <div class="model-composer">
+          <textarea class="model-input" id="modelPrompt" placeholder="Describe the model you want to generate" rows="3"></textarea>
+          <div class="model-options">
+            <button class="model-option" type="button" data-option="mode">Model Generation</button>
+            <button class="model-option" type="button" data-option="provider">Tripo Official API</button>
+            <button class="model-option" type="button" data-option="version">v3.0-20250812</button>
+            <button class="model-option" type="button" data-option="quality">Unlimited Polys</button>
+          </div>
+          <div class="model-actions">
+            <button class="model-circle" type="button" aria-label="Add"></button>
+            <button class="model-send" type="button" aria-label="Generate" aria-disabled="true"><img src="assets/icon_fashe1.webp" alt=""></button>
+          </div>
         </div>
-        <div class="model-actions">
-          <button class="model-circle" type="button" aria-label="Add"></button>
-          <button class="model-send" type="button" aria-label="Generate" aria-disabled="true"><img src="assets/icon_fashe1.webp" alt=""></button>
+      </section>
+
+      <section class="model-section" aria-label="Model gallery">
+        <h2 class="model-section-title">Model</h2>
+        <div class="filters">
+          <button class="filter-chip active" type="button">All</button>
+          <button class="filter-chip" type="button">Category</button>
+          <button class="filter-chip" type="button">Category</button>
+          <button class="filter-chip" type="button">Category</button>
+          <button class="filter-chip" type="button">Category</button>
+          <button class="filter-chip" type="button">Category</button>
         </div>
-      </div>
-    </section>
 
-    <section class="model-section" aria-label="Model gallery">
-      <h2 class="model-section-title">Model</h2>
-      <div class="filters">
-        <button class="filter-chip active" type="button">All</button>
-        <button class="filter-chip" type="button">Category</button>
-        <button class="filter-chip" type="button">Category</button>
-        <button class="filter-chip" type="button">Category</button>
-        <button class="filter-chip" type="button">Category</button>
-        <button class="filter-chip" type="button">Category</button>
-      </div>
-
-      <div class="model-grid">
+        <div class="model-grid">
         <article class="model-card">
           <div class="model-preview"><div class="model-object dog" style="--object-a:#f4efe5;--object-b:#9f9789"></div></div>
           <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
@@ -2317,7 +2773,60 @@ body.detail-open {
           <div class="model-preview"><div class="model-object head"></div></div>
           <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
         </article>
+        </div>
+      </section>
+    </div>
+
+    <section class="rigging-view" aria-label="Rigging workspace">
+      <aside class="rigging-panel rigging-left" aria-label="Rigging controls">
+        <section class="rigging-section">
+          <h2 class="rigging-heading">File Upload</h2>
+          <button class="rigging-upload" type="button"><span class="rigging-plus">+</span><span>Drag GLB file here</span><span class="rigging-muted">or click to select file</span></button>
+          <div class="rigging-file"><div class="rigging-file-thumb"></div><div><div class="rigging-file-name">Untitled Model.glb</div><div class="rigging-muted">832.9kb</div></div></div>
+        </section>
+        <section class="rigging-section">
+          <h2 class="rigging-heading">Processing Mode</h2>
+          <button class="rigging-action is-selected" type="button"><span class="rigging-icon">♟</span>Human Animation</button>
+          <button class="rigging-action" type="button"><span class="rigging-icon">✤</span>Human Animation</button>
+          <button class="rigging-action" type="button"><span class="rigging-icon">◇</span>Human Animation</button>
+        </section>
+        <section class="rigging-section">
+          <h2 class="rigging-heading">Material Editor</h2>
+          <button class="rigging-action" type="button"><span class="rigging-icon">✽</span>Edit Materials</button>
+        </section>
+        <section class="rigging-section">
+          <h2 class="rigging-heading">Download Material Edited</h2>
+          <button class="rigging-action" type="button"><span class="rigging-icon">⇩</span>Download Material GLB</button>
+        </section>
+        <section class="rigging-section">
+          <h2 class="rigging-heading">Start Processing</h2>
+          <button class="rigging-action" type="button"><span class="rigging-icon">➤</span>Start Processing</button>
+          <div class="rigging-progress"><div class="rigging-progress-top"><span>Processing completed</span><span>100%</span></div><div class="rigging-progress-bar"><span></span></div><div class="rigging-muted">All processing steps completed</div></div>
+          <button class="rigging-action" type="button"><span class="rigging-icon">⇩</span>Download Rigged Mode</button>
+          <button class="rigging-action" type="button"><span class="rigging-icon">⇩</span>Download Animated Model</button>
+        </section>
+      </aside>
+      <div class="rigging-stage">
+        <div class="rigging-character" aria-label="Rigged character preview">
+          <div class="rig-hair"></div><div class="rig-head"></div><div class="rig-eye left"></div><div class="rig-eye right"></div><div class="rig-mouth"></div><div class="rig-body"></div><div class="rig-arm left"></div><div class="rig-arm right"></div><div class="rig-hand left"></div><div class="rig-hand right"></div><div class="rig-leg left"></div><div class="rig-leg right"></div><div class="rig-foot left"></div><div class="rig-foot right"></div>
+        </div>
       </div>
+      <div class="rigging-player" aria-label="Animation playback">
+        <button class="play" type="button">▶ Play</button><button type="button">0.3x</button><button type="button">0.5x</button><button class="is-selected" type="button">1x</button><button type="button">2x</button><button type="button">3x</button>
+      </div>
+      <aside class="rigging-panel rigging-right" aria-label="Human animation selection">
+        <h2 class="rigging-heading">Human Animation Selection</h2>
+        <div class="animation-list">
+          <button class="animation-card" type="button"><span class="rigging-icon">●</span>Idle</button>
+          <button class="animation-card" type="button"><span class="rigging-icon">♟</span>Walk</button>
+          <button class="animation-card" type="button"><span class="rigging-icon">⌁</span>Cat Walk</button>
+          <button class="animation-card is-selected" type="button"><span class="rigging-icon">♞</span>Run</button>
+          <button class="animation-card" type="button"><span class="rigging-icon">⇡</span>Run</button>
+          <button class="animation-card" type="button"><span class="rigging-icon">≋</span>Run</button>
+          <button class="animation-card" type="button"><span class="rigging-icon">≋</span>Run</button>
+          <button class="animation-card" type="button"><span class="rigging-icon">≋</span>Run</button>
+        </div>
+      </aside>
     </section>
   </section>
 
@@ -2403,6 +2912,7 @@ const detailSubtitle = document.getElementById("detailSubtitle");
 const relatedRow = document.getElementById("relatedRow");
 const filterGroups = Array.from(document.querySelectorAll(".filters"));
 const modelTabs = Array.from(document.querySelectorAll(".model-tab"));
+const modelPage = document.querySelector(".model-page");
 const modelSectionTitle = document.querySelector(".model-section-title");
 const modelModeOption = document.querySelector(".model-option");
 const modelComposer = document.querySelector(".model-composer");
@@ -2552,14 +3062,18 @@ function setupModelTabs() {
   modelTabs.forEach((tab) => {
     tab.setAttribute("aria-pressed", tab.classList.contains("is-selected") ? "true" : "false");
     tab.addEventListener("click", () => {
+      const mode = tab.dataset.mode || tab.textContent.trim().toLowerCase();
       modelTabs.forEach((item) => {
         item.classList.remove("is-selected");
         item.setAttribute("aria-pressed", "false");
       });
       tab.classList.add("is-selected");
       tab.setAttribute("aria-pressed", "true");
-      if (modelSectionTitle) modelSectionTitle.textContent = tab.textContent.trim();
-      if (modelModeOption) modelModeOption.textContent = `${tab.textContent.trim()} Generation`;
+      if (modelPage) modelPage.dataset.mode = mode;
+      document.body.classList.toggle("model-rigging", mode === "rigging");
+      if (modelSectionTitle) modelSectionTitle.textContent = mode === "rigging" ? "Rigging" : "Model";
+      if (modelModeOption && mode !== "rigging") modelModeOption.textContent = `${tab.textContent.trim()} Generation`;
+      closeModelOptionMenu();
     });
   });
 }
@@ -2699,6 +3213,7 @@ function setView(view) {
   const isHome = !isGames && !isModel;
   document.body.classList.toggle("my-games", isGames);
   document.body.classList.toggle("model", isModel);
+  document.body.classList.toggle("model-rigging", isModel && modelPage?.dataset.mode === "rigging");
   navHome.classList.toggle("is-active", isHome);
   navGames.classList.toggle("is-active", isGames);
   navModel.classList.toggle("is-active", isModel);
