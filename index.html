@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanaka</title>
+<style>
+@font-face {
+  font-family: "Jersey 15";
+  src: url("Jersey15-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #150c0a;
+  color: #fff;
+  font-family: Poppins, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.viewport {
+  position: relative;
+  width: 100vw;
+  min-height: var(--home-viewport-height, 1500px);
+  overflow: hidden;
+  background: #150c0a;
+}
+
+body.my-games .viewport {
+  min-height: 100vh;
+  overflow: visible;
+  background: #150c0a url("my_game_bj.webp") top center / 100% auto no-repeat;
+}
+
+body.model .viewport {
+  min-height: 1000px;
+  overflow: visible;
+  background: #150c0a url("model_bj.webp") top center / 100% auto no-repeat;
+}
+
+body.my-games .canvas,
+body.my-games .feed,
+body.model .canvas,
+body.model .feed,
+body.model .my-games-page {
+  display: none;
+}
+
+.canvas {
+  position: absolute;
+  left: var(--canvas-left, 0);
+  top: var(--canvas-top, 0);
+  width: 1920px;
+  height: 1500px;
+  overflow: visible;
+  background: #150c0a;
+  transform: scale(var(--scale, 1));
+  transform-origin: left top;
+}
+
+.scene-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 841px;
+  object-fit: cover;
+}
+
+.top-gradient {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 260px;
+  opacity: .16;
+  background: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 160px;
+  height: 100vh;
+  background: rgba(0, 0, 0, .16);
+  box-shadow: -1px 0 0 rgba(255, 255, 255, .12) inset;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.feed {
+  position: absolute;
+  left: 160px;
+  top: var(--feed-top, 760px);
+  width: calc(100vw - 160px);
+  max-width: 1760px;
+  min-height: 740px;
+  padding: 20px 40px;
+  background: #150c0a;
+}
+
+.feed-section {
+  width: 100%;
+  content-visibility: auto;
+  contain-intrinsic-size: 240px;
+}
+
+.feed-section + .feed-section {
+  margin-top: 24px;
+}
+
+.feed-header {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feed-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.view-all {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, .6);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.view-all span {
+  color: #b8b9b6;
+  font-family: Orbitron, Poppins, sans-serif;
+}
+
+.feed-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.game-tile {
+  width: 233px;
+  flex: 0 0 233px;
+}
+
+.black-cartridge {
+  position: relative;
+  width: 233px;
+  height: 146px;
+}
+
+.black-cartridge > img {
+  position: absolute;
+  inset: 0;
+  width: 233px;
+  height: 146px;
+  display: block;
+}
+
+.thumbnail {
+  position: absolute;
+  left: 8px;
+  top: 16px;
+  width: 217px;
+  height: 118px;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, .06);
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)),
+    rgba(255, 255, 255, .06);
+}
+
+.thumbnail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--thumb);
+  background-size: cover;
+  background-position: center;
+}
+
+.thumbnail img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.tile-meta {
+  margin-top: 12px;
+}
+
+.tile-name {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.tile-sub {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, .4);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.hot {
+  color: #c0f000;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+}
+
+.logo {
+  position: absolute;
+  left: 24px;
+  top: 32px;
+  width: 85.5px;
+  height: 20px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.collapse {
+  position: absolute;
+  left: 132px;
+  top: 30px;
+  width: 24px;
+  height: 24px;
+  opacity: .4;
+  transform: rotate(180deg);
+}
+
+.nav-item {
+  position: absolute;
+  left: 24px;
+  width: 112px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, .4);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.nav-item:focus,
+.nav-item:focus-visible {
+  outline: none;
+}
+
+.nav-item.is-active {
+  color: #fff;
+}
+
+.nav-item.home {
+  top: 96px;
+}
+
+.nav-item.games {
+  top: 136px;
+}
+
+.nav-item.model {
+  top: 176px;
+}
+
+.nav-item img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  opacity: .45;
+}
+
+.nav-item.is-active img {
+  opacity: 1;
+}
+
+.profile {
+  position: absolute;
+  left: 24px;
+  bottom: 32px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #121212;
+}
+
+.profile-avatar img {
+  width: 118px;
+  height: auto;
+  transform: translateX(37px);
+}
+
+.profile-name {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 12px;
+}
+
+.profile-credits {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, .4);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 12px;
+}
+
+.profile-arrow {
+  width: 12px;
+  height: 12px;
+  margin-left: 10px;
+  opacity: .4;
+}
+
+.cards-fade {
+  position: absolute;
+  left: 502px;
+  top: 504px;
+  width: 933px;
+  height: 124px;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.1) 8%, rgba(255,255,255,.1) 90%, rgba(255,255,255,0) 100%);
+  mix-blend-mode: screen;
+  opacity: .26;
+  pointer-events: none;
+}
+
+.game-screen {
+  position: absolute;
+  left: 802px;
+  top: 197.04px;
+  z-index: 1;
+  width: 340.56px;
+  height: 224.4px;
+  overflow: hidden;
+  border-radius: 5.28px;
+  background: #101c1b;
+}
+
+.game-screen img,
+.game-screen video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform: scale(1.04);
+  animation: screenDrift 8s ease-in-out infinite alternate;
+}
+
+.game-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,.08) 0 1px, transparent 1px 4px),
+    radial-gradient(circle at 50% 50%, transparent 0 55%, rgba(0, 0, 0, .2) 100%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.game-name-display {
+  position: absolute;
+  left: 935px;
+  top: 442px;
+  z-index: 3;
+  width: 75px;
+  color: #a8db74;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(168, 219, 116, .6);
+  font-family: "Jersey 15", monospace;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  pointer-events: none;
+}
+
+@keyframes screenDrift {
+  from {
+    transform: scale(1.04) translate3d(-4px, -3px, 0);
+  }
+
+  to {
+    transform: scale(1.08) translate3d(5px, 3px, 0);
+  }
+}
+
+.card {
+  position: absolute;
+  width: 149.2px;
+  height: 93.6px;
+  z-index: 2;
+  cursor: pointer;
+  transition:
+    left .48s cubic-bezier(.2, .8, .2, 1),
+    top .48s cubic-bezier(.2, .8, .2, 1),
+    width .48s cubic-bezier(.2, .8, .2, 1),
+    height .48s cubic-bezier(.2, .8, .2, 1),
+    opacity .3s ease,
+    filter .3s ease;
+}
+
+.card:focus,
+.card:focus-visible {
+  outline: none;
+}
+
+.card:hover {
+  filter: brightness(1.08);
+}
+
+.card.big {
+  width: 186.5px;
+  height: 117px;
+  z-index: 4;
+}
+
+.card-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.card-cover {
+  position: absolute;
+  left: 5.12px;
+  top: 10.88px;
+  z-index: 2;
+  width: 138.88px;
+  height: 75.52px;
+  display: block;
+  object-fit: cover;
+  border-radius: 3.84px;
+  border: 0;
+  background: rgba(255, 255, 255, .06);
+}
+
+.card.big .card-cover {
+  left: 6.4px;
+  top: 13.6px;
+  width: 173.6px;
+  height: 94.4px;
+  border-radius: 4.8px;
+  border-width: .8px;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: rgba(115, 55, 14, .34);
+  mix-blend-mode: darken;
+  pointer-events: none;
+}
+
+.card.big::after {
+  background: rgba(255, 255, 255, .16);
+  mix-blend-mode: overlay;
+}
+
+.card-title {
+  position: absolute;
+  left: 5.12px;
+  top: 2.56px;
+  z-index: 5;
+  color: rgba(255, 255, 255, .46);
+  font-family: "Courier New", monospace;
+  font-size: 5.12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.card.big .card-title {
+  left: 6.4px;
+  top: 3.2px;
+  font-size: 6.4px;
+}
+
+.chip {
+  position: absolute;
+  top: 666px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .56);
+  color: rgba(255, 255, 255, .8);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.composer {
+  position: absolute;
+  left: 610px;
+  top: 701px;
+  width: 700px;
+  height: 120px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, .56);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.composer-input {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 520px;
+  height: 54px;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+.composer-input:focus,
+.composer-input:not(:placeholder-shown) {
+  color: #fff;
+}
+
+.composer-input::placeholder {
+  color: rgba(255, 255, 255, .4);
+  opacity: 1;
+}
+
+.plus-circle {
+  position: absolute;
+  left: 16px;
+  top: 76px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .1);
+}
+
+.plus-circle::before,
+.plus-circle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 1.3px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+.plus-circle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.create {
+  position: absolute;
+  left: 606px;
+  top: 76px;
+  width: 78px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 32px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 12px;
+}
+
+.create::before {
+  font-size: 18px;
+  line-height: 12px;
+}
+
+.create.primary {
+  display: none;
+  background: #c0f000;
+  color: #313d00;
+  font-weight: 600;
+  box-shadow: 0 -2.4px 0 #a6d900 inset;
+}
+
+.create.primary::before {
+  content: "↑";
+  color: #313d00;
+}
+
+.composer.has-value .create.primary {
+  display: flex;
+}
+
+.create.secondary {
+  background: rgba(255, 255, 255, .1);
+  color: rgba(255, 255, 255, .5);
+  cursor: default;
+}
+
+.create.secondary::before {
+  content: "↑";
+  color: rgba(255, 255, 255, .5);
+}
+
+.composer.has-value .create.secondary {
+  display: none;
+}
+
+.create img {
+  display: none;
+}
+
+.my-games-page {
+  position: relative;
+  display: none;
+  min-height: 100vh;
+  margin-left: 160px;
+  padding: 76px 40px 64px;
+  overflow: hidden;
+  background: transparent;
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
+}
+
+body.my-games .my-games-page {
+  display: block;
+}
+
+.my-games-page::before,
+.my-games-page::after,
+.my-games-glow {
+  display: none;
+}
+
+.my-games-page::before {
+  opacity: .6;
+  background: #ffb661;
+}
+
+.my-games-page::after {
+  height: 424px;
+  background: #f18d13;
+}
+
+.my-games-glow {
+  height: 313px;
+  background: #853b29;
+}
+
+.my-games-glow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2114px;
+  height: 192px;
+  background: #1c1c1c;
+}
+
+.my-games-content {
+  position: relative;
+  z-index: 1;
+}
+
+.my-games-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.my-games-title {
+  color: #fff;
+  font-family: "Jersey 15", monospace;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: 0;
+}
+
+.my-games-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 42px;
+}
+
+.search-pill {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 46px;
+  background: rgba(255, 255, 255, .06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
+  color: rgba(255, 255, 255, .4);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.search-icon {
+  width: 14px;
+  height: 14px;
+  position: relative;
+  opacity: .4;
+}
+
+.search-icon::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 8px;
+  height: 8px;
+  border: 1.3px solid #fff;
+  border-radius: 50%;
+}
+
+.search-icon::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 9px;
+  width: 5px;
+  height: 1.3px;
+  background: #fff;
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.create-game {
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: #c0f000;
+  box-shadow: 0 3px 0 #a6d900;
+  color: #222;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.create-plus {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.create-plus::before,
+.create-plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.9px;
+  background: #222;
+  transform: translate(-50%, -50%);
+}
+
+.create-plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.filter-chip {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .06);
+  color: rgba(255, 255, 255, .5);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 12px;
+}
+
+.filter-chip.active {
+  color: #fff;
+  border-radius: 46px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
+}
+
+.my-games-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+  margin-top: 26px;
+  max-width: 1666px;
+}
+
+.my-games-grid .game-tile {
+  margin-bottom: 8px;
+}
+
+.model-page {
+  position: relative;
+  display: none;
+  min-height: 1000px;
+  margin-left: 160px;
+  padding: 20px 40px 64px;
+  overflow: visible;
+  background: transparent;
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
+}
+
+body.model .model-page {
+  display: block;
+}
+
+.model-tabs {
+  width: 188px;
+  height: 44px;
+  margin: 0 auto;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, .4);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18);
+}
+
+.model-tab {
+  width: 90px;
+  height: 36px;
+  border-radius: 22px;
+  color: rgba(255, 255, 255, .6);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+}
+
+.model-tab.is-selected {
+  color: #fff;
+  background: rgba(255, 255, 255, .1);
+}
+
+.model-hero {
+  margin-top: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.model-title {
+  color: #fff;
+  font-family: "Jersey 15", monospace;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 36px;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.model-title .accent {
+  color: #c0f000;
+}
+
+.model-composer {
+  position: relative;
+  width: min(800px, calc(100vw - 240px));
+  height: 166px;
+  margin-top: 32px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .04);
+}
+
+.model-input-placeholder {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  color: rgba(255, 255, 255, .4);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.model-options {
+  position: absolute;
+  left: 12px;
+  right: 88px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.model-option {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.model-option::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid rgba(255, 255, 255, .85);
+  border-bottom: 1.5px solid rgba(255, 255, 255, .85);
+  transform: rotate(45deg) translateY(-2px);
+}
+
+.model-actions {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.model-circle {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+
+.model-circle::before,
+.model-circle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.7px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+.model-circle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.model-send {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .1);
+}
+
+.model-send img {
+  width: 16px;
+  height: 16px;
+  transform: rotate(90deg);
+  opacity: .5;
+}
+
+.model-section {
+  margin-top: 48px;
+}
+
+.model-section-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.model-section .filters {
+  margin-top: 18px;
+}
+
+.model-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.model-card {
+  width: 172px;
+  flex: 0 0 172px;
+}
+
+.model-preview {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12.8px;
+  border: .8px solid rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .04);
+  overflow: hidden;
+}
+
+.model-object {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  border-radius: 44% 48% 40% 46%;
+  background: linear-gradient(145deg, var(--object-a), var(--object-b));
+  box-shadow: inset -14px -18px 22px rgba(0, 0, 0, .25), 0 18px 28px rgba(0, 0, 0, .22);
+}
+
+.model-object::before,
+.model-object::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  box-shadow: inherit;
+}
+
+.model-object.dog::before {
+  left: -20px;
+  top: 22px;
+  width: 34px;
+  height: 58px;
+  border-radius: 50%;
+  transform: rotate(22deg);
+}
+
+.model-object.dog::after {
+  right: -20px;
+  top: 22px;
+  width: 34px;
+  height: 58px;
+  border-radius: 50%;
+  transform: rotate(-22deg);
+}
+
+.model-object.toy {
+  width: 118px;
+  height: 98px;
+  border-radius: 38px;
+}
+
+.model-object.toy::before {
+  left: 20px;
+  top: -20px;
+  width: 28px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.model-object.toy::after {
+  right: 18px;
+  top: -18px;
+  width: 32px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+.model-object.car {
+  width: 128px;
+  height: 70px;
+  border-radius: 18px;
+}
+
+.model-object.car::before {
+  left: 28px;
+  top: -24px;
+  width: 70px;
+  height: 44px;
+  border-radius: 16px 16px 4px 4px;
+}
+
+.model-object.car::after {
+  left: 14px;
+  bottom: -12px;
+  width: 100px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .46);
+  box-shadow: none;
+}
+
+.model-object.head {
+  width: 96px;
+  height: 126px;
+  border-radius: 46% 46% 40% 40%;
+  background: linear-gradient(145deg, #f3eee2, #9d9587);
+}
+
+.model-object.head::before {
+  left: 20px;
+  bottom: -14px;
+  width: 56px;
+  height: 26px;
+  border-radius: 50%;
+}
+
+.model-object.head::after {
+  left: 19px;
+  top: 48px;
+  width: 58px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(70, 62, 54, .34);
+  box-shadow: 0 26px 0 rgba(70, 62, 54, .2);
+}
+
+.model-card .tile-meta {
+  margin-top: 14px;
+}
+
+.model-card .tile-sub {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .my-games-page {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .model-page {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .my-games-top {
+    flex-direction: column;
+  }
+
+  .my-games-actions {
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .model-composer {
+    width: calc(100vw - 208px);
+  }
+}
+</style>
+</head>
+<body>
+<div class="viewport">
+  <main class="canvas" id="canvas">
+    <picture>
+      <source srcset="assets/img_1_1920.webp" type="image/webp">
+      <img class="scene-bg" src="assets/img_1_1920.webp" alt="" fetchpriority="high" decoding="async">
+    </picture>
+    <div class="top-gradient"></div>
+    <div class="game-screen" aria-label="Game preview screen">
+      <video id="screenMedia" src="2.mp4" poster="2.webp" muted loop autoplay playsinline preload="metadata"></video>
+    </div>
+    <div class="game-name-display" id="gameNameDisplay">Paw Dash</div>
+
+    <div class="cards-fade"></div>
+    <button class="card" type="button" data-card="0" data-name="Dark Room" data-video="5.mp4" data-poster="5.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="5.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
+    <button class="card" type="button" data-card="1" data-name="Island Quest" data-video="1.mp4" data-poster="1.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="1.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
+    <button class="card big" type="button" data-card="2" data-name="Paw Dash" data-video="2.mp4" data-poster="2.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="2.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
+    <button class="card" type="button" data-card="3" data-name="Planet Loot" data-video="3.mp4" data-poster="3.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="3.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
+    <button class="card" type="button" data-card="4" data-name="Road Panic" data-video="4.mp4" data-poster="4.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="4.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
+
+    <button class="chip" style="left:611px" type="button">Switch to Cyberpunk Style</button>
+    <button class="chip" style="left:801px" type="button">Replace the protagonist with my cat</button>
+    <button class="chip" style="left:1052.5px" type="button">Increase fire rate</button>
+
+    <section class="composer" aria-label="Prompt composer">
+      <textarea class="composer-input" id="promptInput" placeholder="Design a city builder" rows="2"></textarea>
+      <button class="plus-circle" type="button" aria-label="Add"></button>
+      <button class="create primary" type="button"><img src="assets/icon_fashe1.webp" alt="">Create</button>
+      <button class="create secondary" type="button" aria-disabled="true"><img src="assets/icon_fashe1.webp" alt="">Create</button>
+    </section>
+  </main>
+
+  <section class="feed" aria-label="Game library">
+    <div class="feed-section">
+      <div class="feed-header">
+        <h2 class="feed-title">Continue working</h2>
+        <div class="view-all">View all <span>→</span></div>
+      </div>
+      <div class="feed-row">
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Bread_blaster.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub">2026.03.12</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Cash%20rayment.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub">2026.03.12</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Clash_arena.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub">2026.03.12</div></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="feed-section">
+      <div class="feed-header">
+        <h2 class="feed-title">Trending templates</h2>
+        <div class="view-all">View all <span>→</span></div>
+      </div>
+      <div class="feed-row">
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Dark_room.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Deep_feast.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Fecape_work.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Float_catch.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Paw_dash.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img src="3-游戏封面/Planet_loot.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="my-games-page" aria-label="My Games page">
+    <div class="my-games-glow"></div>
+    <div class="my-games-content">
+      <div class="my-games-top">
+        <div>
+          <h1 class="my-games-title">My Games</h1>
+          <div class="filters">
+            <button class="filter-chip active" type="button">All</button>
+            <button class="filter-chip" type="button">Category</button>
+            <button class="filter-chip" type="button">Category</button>
+            <button class="filter-chip" type="button">Category</button>
+            <button class="filter-chip" type="button">Category</button>
+            <button class="filter-chip" type="button">Category</button>
+          </div>
+        </div>
+        <div class="my-games-actions">
+          <button class="search-pill" type="button"><span class="search-icon"></span>Search</button>
+          <button class="create-game" type="button"><span class="create-plus"></span>Create</button>
+        </div>
+      </div>
+
+      <div class="my-games-grid">
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Road_panic.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Bread_blaster.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Cash%20rayment.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Clash_arena.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Dark_room.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Deep_feast.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Fecape_work.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Float_catch.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Paw_dash.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Planet_loot.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Road_panic.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Bread_blaster.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Cash%20rayment.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Clash_arena.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Dark_room.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Deep_feast.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Fecape_work.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+        <article class="game-tile">
+          <div class="black-cartridge"><img data-src="assets/img_kadai2.webp" alt="" loading="lazy" decoding="async"><div class="thumbnail"><img data-src="3-游戏封面/Float_catch.webp" alt="" loading="lazy" decoding="async"></div></div>
+          <div class="tile-meta"><div class="tile-name">Sky Racer</div><div class="tile-sub"><span class="hot">🔥</span>2.3k remixes</div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="model-page" aria-label="Model page">
+    <div class="model-tabs" aria-label="Model modes">
+      <button class="model-tab is-selected" type="button">Model</button>
+      <button class="model-tab" type="button">Rigging</button>
+    </div>
+
+    <section class="model-hero" aria-label="Model generator">
+      <h1 class="model-title">One-Click Generate Any <span class="accent">3D Content</span></h1>
+      <div class="model-composer">
+        <div class="model-input-placeholder">Describe the model you want to generate</div>
+        <div class="model-options">
+          <button class="model-option" type="button">Model Generation</button>
+          <button class="model-option" type="button">Tripo Official API</button>
+          <button class="model-option" type="button">v3.0-20250812</button>
+          <button class="model-option" type="button">Unlimited Polys</button>
+        </div>
+        <div class="model-actions">
+          <button class="model-circle" type="button" aria-label="Add"></button>
+          <button class="model-send" type="button" aria-label="Generate"><img src="assets/icon_fashe1.webp" alt=""></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="model-section" aria-label="Model gallery">
+      <h2 class="model-section-title">Model</h2>
+      <div class="filters">
+        <button class="filter-chip active" type="button">All</button>
+        <button class="filter-chip" type="button">Category</button>
+        <button class="filter-chip" type="button">Category</button>
+        <button class="filter-chip" type="button">Category</button>
+        <button class="filter-chip" type="button">Category</button>
+        <button class="filter-chip" type="button">Category</button>
+      </div>
+
+      <div class="model-grid">
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object dog" style="--object-a:#f4efe5;--object-b:#9f9789"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object toy" style="--object-a:#ffdc37;--object-b:#1189d0"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object toy" style="--object-a:#75a5bd;--object-b:#2f5772"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object dog" style="--object-a:#ddae7a;--object-b:#1f2430"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object car" style="--object-a:#f2eee7;--object-b:#c54e2f"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object dog" style="--object-a:#f4efe5;--object-b:#9f9789"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object toy" style="--object-a:#ffdc37;--object-b:#1189d0"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object toy" style="--object-a:#75a5bd;--object-b:#2f5772"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object dog" style="--object-a:#ddae7a;--object-b:#1f2430"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object car" style="--object-a:#f2eee7;--object-b:#c54e2f"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+        <article class="model-card">
+          <div class="model-preview"><div class="model-object head"></div></div>
+          <div class="tile-meta"><div class="tile-name">Puppy dog</div><div class="tile-sub">Created 11/18/2025 8:4...</div></div>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <aside class="sidebar" aria-label="Main navigation">
+    <img class="logo" src="assets/ico_logo.webp" alt="Wanaka">
+    <img class="collapse" src="assets/icon_jiantou.webp" alt="">
+
+    <button class="nav-item home is-active" type="button" data-view="home"><img src="assets/ico_home1.webp" alt="">Home</button>
+    <button class="nav-item games" type="button" data-view="my-games"><img src="assets/icon_my2.webp" alt="">My Games</button>
+    <button class="nav-item model" type="button" data-view="model"><img src="assets/icon_model2.webp" alt="">Model</button>
+
+    <div class="profile">
+      <div class="profile-avatar"><img src="assets/ico_logo.webp" alt=""></div>
+      <div>
+        <div class="profile-name">lihongfei</div>
+        <div class="profile-credits">40 credits</div>
+      </div>
+      <img class="profile-arrow" src="assets/icon_xiajiantou.webp" alt="">
+    </div>
+  </aside>
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const navHome = document.querySelector('[data-view="home"]');
+const navGames = document.querySelector('[data-view="my-games"]');
+const navModel = document.querySelector('[data-view="model"]');
+const screenMedia = document.getElementById("screenMedia");
+const gameNameDisplay = document.getElementById("gameNameDisplay");
+const carouselCards = Array.from(document.querySelectorAll(".card[data-card]"));
+const composer = document.querySelector(".composer");
+const promptInput = document.getElementById("promptInput");
+const promptChips = Array.from(document.querySelectorAll(".chip"));
+const hydratedViews = new Set(["home"]);
+let activeCard = 2;
+
+const cardSlots = {
+  "-2": { left: 512, top: 520, width: 149.2, height: 93.6, opacity: .62, z: 2 },
+  "-1": { left: 693.16, top: 520, width: 149.2, height: 93.6, opacity: .86, z: 3 },
+  "0": { left: 874.32, top: 508, width: 186.5, height: 117, opacity: 1, z: 4 },
+  "1": { left: 1092.76, top: 520, width: 149.2, height: 93.6, opacity: .86, z: 3 },
+  "2": { left: 1273.92, top: 520, width: 149.2, height: 93.6, opacity: .62, z: 2 }
+};
+
+function updateCarousel(nextActive) {
+  activeCard = nextActive;
+
+  carouselCards.forEach((card, index) => {
+    let offset = (index - activeCard + carouselCards.length) % carouselCards.length;
+    if (offset > 2) offset -= carouselCards.length;
+    const slot = cardSlots[String(offset)];
+
+    card.classList.toggle("big", offset === 0);
+    card.style.left = `${slot.left}px`;
+    card.style.top = `${slot.top}px`;
+    card.style.width = `${slot.width}px`;
+    card.style.height = `${slot.height}px`;
+    card.style.opacity = slot.opacity;
+    card.style.zIndex = slot.z;
+    card.setAttribute("aria-pressed", offset === 0 ? "true" : "false");
+  });
+
+  const selected = carouselCards[activeCard];
+  if (selected && screenMedia) {
+    if (gameNameDisplay) {
+      gameNameDisplay.textContent = selected.dataset.name;
+    }
+    screenMedia.style.animation = "none";
+    screenMedia.poster = selected.dataset.poster;
+    screenMedia.src = selected.dataset.video;
+    screenMedia.load();
+    screenMedia.play().catch(() => {});
+    screenMedia.offsetHeight;
+    screenMedia.style.animation = "";
+  }
+}
+
+function updatePromptState() {
+  if (!composer || !promptInput) return;
+  composer.classList.toggle("has-value", promptInput.value.trim().length > 0);
+}
+
+function hydrateViewImages(view) {
+  if (hydratedViews.has(view)) return;
+  const page = document.querySelector(`.${view}-page`);
+  if (!page) return;
+
+  page.querySelectorAll("img[data-src]").forEach((img) => {
+    img.src = img.dataset.src;
+    img.removeAttribute("data-src");
+  });
+  hydratedViews.add(view);
+}
+
+function fitCanvas() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const designW = 1920;
+  const designH = 888;
+  const sidebarW = 160;
+  const contentW = designW - sidebarW;
+  const viewportContentW = Math.max(vw - sidebarW, 1);
+  const contentCenterX = sidebarW + (designW - sidebarW) / 2;
+  const viewportContentCenterX = sidebarW + viewportContentW / 2;
+  const scale = Math.max(viewportContentW / contentW, vh / designH);
+  const left = viewportContentCenterX - (contentCenterX * scale);
+  const top = (vh - designH * scale) / 2;
+  const feedTop = Math.max(760, Math.ceil(top + 850 * scale));
+  const viewportHeight = Math.max(1500, feedTop + 780);
+
+  document.documentElement.style.setProperty("--scale", scale.toFixed(5));
+  document.documentElement.style.setProperty("--canvas-left", `${left}px`);
+  document.documentElement.style.setProperty("--canvas-top", `${top}px`);
+  document.documentElement.style.setProperty("--feed-top", `${feedTop}px`);
+  document.documentElement.style.setProperty("--home-viewport-height", `${viewportHeight}px`);
+}
+
+function setView(view) {
+  const isGames = view === "my-games";
+  const isModel = view === "model";
+  const isHome = !isGames && !isModel;
+  document.body.classList.toggle("my-games", isGames);
+  document.body.classList.toggle("model", isModel);
+  navHome.classList.toggle("is-active", isHome);
+  navGames.classList.toggle("is-active", isGames);
+  navModel.classList.toggle("is-active", isModel);
+  navHome.querySelector("img").src = isHome ? "assets/ico_home1.webp" : "assets/ico_home2.webp";
+  navGames.querySelector("img").src = isGames ? "assets/icon_my1.webp" : "assets/icon_my2.webp";
+  navModel.querySelector("img").src = isModel ? "assets/icon_model1.webp" : "assets/icon_model2.webp";
+  if (isGames) hydrateViewImages("my-games");
+  if (isModel) hydrateViewImages("model");
+  window.scrollTo({ top: 0, behavior: "auto" });
+  fitCanvas();
+}
+
+navHome.addEventListener("click", () => setView("home"));
+navGames.addEventListener("click", () => setView("my-games"));
+navModel.addEventListener("click", () => setView("model"));
+promptInput.addEventListener("input", updatePromptState);
+promptChips.forEach((chip) => {
+  chip.addEventListener("click", () => {
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    promptInput.value = chip.textContent.trim();
+    updatePromptState();
+    chip.blur();
+    window.scrollTo(scrollX, scrollY);
+  });
+});
+carouselCards.forEach((card, index) => {
+  card.addEventListener("click", (event) => {
+    event.preventDefault();
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    updateCarousel(index);
+    card.blur();
+    window.scrollTo(scrollX, scrollY);
+  });
+});
+window.addEventListener("resize", fitCanvas);
+updateCarousel(activeCard);
+updatePromptState();
+fitCanvas();
+</script>
+</body>
+</html>
