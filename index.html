@@ -1283,6 +1283,267 @@ body.model .model-page {
   white-space: nowrap;
 }
 
+.game-detail {
+  --detail-sheet-height: min(84vh, 848px);
+  --detail-sheet-top: calc(100vh - var(--detail-sheet-height));
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, .54);
+  padding: calc(var(--detail-sheet-top) + 36px) max(24px, calc((100vw - 720px) / 2)) 56px;
+}
+
+.game-detail.is-open {
+  display: block;
+}
+
+.game-detail-panel {
+  position: relative;
+  width: min(720px, 100%);
+  min-height: 920px;
+  margin: 0 auto;
+  padding: 0 0 48px;
+  color: #fff;
+}
+
+.game-detail-panel::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  height: var(--detail-sheet-height);
+  background: #150c0a;
+  border-radius: 24px 24px 0 0;
+}
+
+.detail-close {
+  position: fixed;
+  left: 24px;
+  top: calc(var(--detail-sheet-top) + 18px + env(safe-area-inset-top));
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  font-size: 30px;
+  line-height: 44px;
+}
+
+.detail-close:focus-visible {
+  outline: 2px solid rgba(192, 240, 0, .7);
+  outline-offset: 3px;
+}
+
+.detail-head {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.detail-cover,
+.related-cover {
+  width: 160px;
+  height: 160px;
+  display: block;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .06);
+  background: rgba(255, 255, 255, .06);
+}
+
+.detail-title {
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.detail-maturity {
+  width: max-content;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 46px;
+  background: rgba(255, 255, 255, .06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
+  color: #fff;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.detail-subtitle {
+  margin-top: 18px;
+  color: rgba(255, 255, 255, .6);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.detail-primary,
+.detail-secondary,
+.detail-chip {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.detail-primary {
+  min-width: 94px;
+  background: #c0f000;
+  box-shadow: 0 2.4px 0 #a6d900;
+  color: #313d00;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.detail-secondary {
+  min-width: 109px;
+  background: rgba(255, 255, 255, .2);
+  box-shadow: 0 3px 0 rgba(255, 255, 255, .12);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.detail-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.detail-chip {
+  height: 32px;
+  border-radius: 46px;
+  background: rgba(255, 255, 255, .06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
+  color: #fff;
+}
+
+.detail-hero {
+  width: 100%;
+  aspect-ratio: 720 / 404;
+  margin-top: 20px;
+  display: block;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #d9d9d9;
+}
+
+.detail-description {
+  margin-top: 24px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .06);
+}
+
+.detail-description-title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+.detail-description-text {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, .6);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.detail-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.detail-stat {
+  min-height: 58px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
+}
+
+.detail-stat strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.detail-stat span {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, .4);
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.related-title {
+  margin-top: 34px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.related-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.related-card {
+  min-width: 0;
+}
+
+.related-name {
+  margin-top: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.related-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, .4);
+  font-size: 12px;
+  line-height: 14px;
+}
+
+body.detail-open {
+  overflow: hidden;
+}
+
 @media (max-width: 900px) {
   .my-games-page {
     padding-right: 24px;
@@ -1615,6 +1876,70 @@ body.model .model-page {
     width: 68%;
     height: 68%;
   }
+
+  .game-detail {
+    --detail-sheet-height: calc(100vh - 72px);
+    --detail-sheet-top: 72px;
+    padding: calc(var(--detail-sheet-top) + 24px) 16px 86px;
+  }
+
+  .game-detail-panel {
+    min-height: auto;
+    padding: 0 0 34px;
+  }
+
+  .game-detail-panel::before {
+    height: calc(100vh - 72px);
+    border-radius: 22px 22px 0 0;
+  }
+
+  .detail-close {
+    left: 16px;
+    top: calc(var(--detail-sheet-top) + 10px);
+    width: 40px;
+    height: 40px;
+    font-size: 28px;
+    line-height: 40px;
+  }
+
+  .detail-head {
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .detail-cover,
+  .related-cover {
+    width: 104px;
+    height: 104px;
+  }
+
+  .detail-title {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .detail-actions {
+    margin-top: 18px;
+  }
+
+  .detail-primary,
+  .detail-secondary {
+    min-width: 0;
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .detail-stat-grid,
+  .related-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .related-cover {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
 }
 </style>
 </head>
@@ -1932,6 +2257,47 @@ body.model .model-page {
       <img class="profile-arrow" src="assets/icon_xiajiantou.webp" alt="">
     </div>
   </aside>
+
+  <section class="game-detail" id="gameDetail" aria-hidden="true">
+    <div class="game-detail-panel" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <button class="detail-close" id="detailClose" type="button" aria-label="Close">×</button>
+      <div class="detail-head">
+        <img class="detail-cover" id="detailCover" src="2.webp" alt="">
+        <div>
+          <h2 class="detail-title" id="detailTitle">Natural Disaster Survival</h2>
+          <div class="detail-maturity">Maturity: Very Low</div>
+          <div class="detail-subtitle" id="detailSubtitle">Natural Disaster Survival</div>
+          <div class="detail-actions">
+            <button class="detail-primary" type="button">▶ Play</button>
+            <button class="detail-secondary" type="button">⟳ Remix</button>
+          </div>
+        </div>
+      </div>
+      <div class="detail-metrics" aria-label="Game stats and actions">
+        <button class="detail-chip" type="button">♘ 98%</button>
+        <button class="detail-chip" type="button">🎮 1.3K</button>
+        <button class="detail-chip" type="button">↗ Share</button>
+        <button class="detail-chip" type="button">☆ Favorite</button>
+      </div>
+      <img class="detail-hero" id="detailHero" src="2.webp" alt="">
+      <div class="detail-description">
+        <div class="detail-description-title">Description</div>
+        <div class="detail-description-text">Run, run, run! Get around the track as fast as you can — your life depends on how well you run!</div>
+      </div>
+      <div class="detail-stat-grid">
+        <div class="detail-stat"><strong>4.21 Billion</strong><span>Visits</span></div>
+        <div class="detail-stat"><strong>Low</strong><span>Content Maturity</span></div>
+        <div class="detail-stat"><strong>Stickmasterluke</strong><span>Developer</span></div>
+        <div class="detail-stat"><strong>Survival</strong><span>Genre</span></div>
+        <div class="detail-stat"><strong>Mar 29, 2008</strong><span>Created</span></div>
+        <div class="detail-stat"><strong>Mar 12, 2026</strong><span>Updated</span></div>
+        <div class="detail-stat"><strong>Enabled</strong><span>Voice Chat</span></div>
+        <div class="detail-stat"><strong>Enabled</strong><span>Camera</span></div>
+      </div>
+      <h3 class="related-title">Others are also playing</h3>
+      <div class="related-row" id="relatedRow"></div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -1947,6 +2313,13 @@ const promptInput = document.getElementById("promptInput");
 const promptChips = Array.from(document.querySelectorAll(".chip"));
 const collapseToggle = document.querySelector(".collapse");
 const sidebarLogo = document.querySelector(".sidebar > .logo");
+const gameDetail = document.getElementById("gameDetail");
+const detailClose = document.getElementById("detailClose");
+const detailCover = document.getElementById("detailCover");
+const detailHero = document.getElementById("detailHero");
+const detailTitle = document.getElementById("detailTitle");
+const detailSubtitle = document.getElementById("detailSubtitle");
+const relatedRow = document.getElementById("relatedRow");
 const hydratedViews = new Set(["home"]);
 let activeCard = 2;
 let isSidebarCollapsed = false;
@@ -1995,6 +2368,62 @@ function updateCarousel(nextActive) {
 function updatePromptState() {
   if (!composer || !promptInput) return;
   composer.classList.toggle("has-value", promptInput.value.trim().length > 0);
+}
+
+function resolveImageSrc(img) {
+  if (!img) return "2.webp";
+  return img.currentSrc || img.getAttribute("src") || img.dataset.src || "2.webp";
+}
+
+function collectRelatedGames(activeSrc) {
+  const sources = Array.from(document.querySelectorAll(".thumbnail img, .card-cover"))
+    .map((img) => ({
+      src: resolveImageSrc(img),
+      name: img.closest(".game-tile")?.querySelector(".tile-name")?.textContent?.trim() ||
+        img.closest(".card")?.dataset.name ||
+        "Sky Racer",
+    }))
+    .filter((item) => item.src && item.src !== activeSrc);
+  return sources.slice(0, 4);
+}
+
+function renderRelatedGames(activeSrc) {
+  if (!relatedRow) return;
+  const items = collectRelatedGames(activeSrc);
+  relatedRow.innerHTML = items.map((item) => `
+    <article class="related-card">
+      <img class="related-cover" src="${item.src}" alt="">
+      <div class="related-name">${item.name}</div>
+      <div class="related-meta"><span class="hot">🔥</span><span>2.3k remixes</span></div>
+    </article>
+  `).join("");
+}
+
+function openGameDetail(sourceElement) {
+  if (!gameDetail) return;
+  const card = sourceElement.closest(".card");
+  const tile = sourceElement.closest(".game-tile");
+  const title = card?.dataset.name || tile?.querySelector(".tile-name")?.textContent?.trim() || "Natural Disaster Survival";
+  const image = card
+    ? card.dataset.poster
+    : resolveImageSrc(tile?.querySelector(".thumbnail img"));
+
+  detailTitle.textContent = title || "Natural Disaster Survival";
+  detailSubtitle.textContent = title || "Natural Disaster Survival";
+  detailCover.src = image;
+  detailHero.src = image;
+  renderRelatedGames(image);
+  gameDetail.classList.add("is-open");
+  gameDetail.setAttribute("aria-hidden", "false");
+  document.body.classList.add("detail-open");
+  detailClose?.focus();
+}
+
+function closeGameDetail() {
+  if (!gameDetail) return;
+  gameDetail.classList.remove("is-open");
+  gameDetail.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("detail-open");
 }
 
 function hydrateViewImages(view) {
@@ -2118,9 +2547,28 @@ carouselCards.forEach((card, index) => {
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
     updateCarousel(index);
+    openGameDetail(card);
     card.blur();
     window.scrollTo(scrollX, scrollY);
   });
+});
+document.querySelectorAll(".game-tile").forEach((tile) => {
+  tile.setAttribute("tabindex", "0");
+  tile.setAttribute("role", "button");
+  tile.addEventListener("click", () => openGameDetail(tile));
+  tile.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openGameDetail(tile);
+    }
+  });
+});
+detailClose?.addEventListener("click", closeGameDetail);
+gameDetail?.addEventListener("click", (event) => {
+  if (event.target === gameDetail) closeGameDetail();
+});
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeGameDetail();
 });
 window.addEventListener("resize", fitCanvas);
 updateCarousel(activeCard);
