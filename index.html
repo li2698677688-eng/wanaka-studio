@@ -338,10 +338,23 @@ body.model .my-games-page {
 .tile-action {
   width: 112px;
   height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border-radius: 12px;
+  font-family: Poppins, sans-serif;
   font-size: 16px;
+  font-style: normal;
   font-weight: 600;
   line-height: 24px;
+}
+
+.tile-action img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .tile-action.play {
@@ -3523,8 +3536,8 @@ function setupGameTileActions() {
     const actions = document.createElement("div");
     actions.className = "tile-actions";
     actions.innerHTML = `
-      <button class="tile-action play" type="button">Play</button>
-      <button class="tile-action remix" type="button">Remix</button>
+      <button class="tile-action play" type="button"><img src="assets/icon_play.png" alt="">Play</button>
+      <button class="tile-action remix" type="button"><img src="assets/icon_remix2.png" alt="">Remix</button>
     `;
     actions.querySelectorAll("button").forEach((button) => {
       button.addEventListener("click", (event) => {
