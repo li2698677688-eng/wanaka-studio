@@ -469,11 +469,11 @@ body.sidebar-collapsed .profile-avatar img {
 
 .cards-fade {
   position: absolute;
-  left: 502px;
-  top: 504px;
-  width: 933px;
-  height: 124px;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.1) 8%, rgba(255,255,255,.1) 90%, rgba(255,255,255,0) 100%);
+  left: 892px;
+  top: 555.5px;
+  width: 746.4px;
+  height: 99.2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.12) 8%, rgba(255,255,255,.12) 90%, rgba(255,255,255,0) 100%);
   mix-blend-mode: screen;
   opacity: .26;
   pointer-events: none;
@@ -481,11 +481,11 @@ body.sidebar-collapsed .profile-avatar img {
 
 .game-screen {
   position: absolute;
-  left: 802px;
-  top: 197.04px;
+  left: 1132px;
+  top: 309.94px;
   z-index: 1;
-  width: 340.56px;
-  height: 224.4px;
+  width: 272.45px;
+  height: 179.52px;
   overflow: hidden;
   border-radius: 5.28px;
   background: #101c1b;
@@ -514,18 +514,18 @@ body.sidebar-collapsed .profile-avatar img {
 
 .game-name-display {
   position: absolute;
-  left: 935px;
-  top: 442px;
+  left: 1238.4px;
+  top: 505.9px;
   z-index: 3;
-  width: 75px;
+  width: 60px;
   color: #a8db74;
   text-align: center;
   text-shadow: 0 0 10px rgba(168, 219, 116, .6);
   font-family: "Jersey 15", monospace;
-  font-size: 16px;
+  font-size: 12.8px;
   font-style: normal;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 12.8px;
   pointer-events: none;
 }
 
@@ -581,11 +581,11 @@ body.sidebar-collapsed .profile-avatar img {
 
 .card-cover {
   position: absolute;
-  left: 5.12px;
-  top: 10.88px;
+  left: 4.1px;
+  top: 8.71px;
   z-index: 2;
-  width: 138.88px;
-  height: 75.52px;
+  width: 111.1px;
+  height: 60.42px;
   display: block;
   object-fit: cover;
   border-radius: 3.84px;
@@ -594,10 +594,10 @@ body.sidebar-collapsed .profile-avatar img {
 }
 
 .card.big .card-cover {
-  left: 6.4px;
-  top: 13.6px;
-  width: 173.6px;
-  height: 94.4px;
+  left: 5.12px;
+  top: 10.88px;
+  width: 138.88px;
+  height: 75.52px;
   border-radius: 4.8px;
   border-width: .8px;
 }
@@ -637,7 +637,7 @@ body.sidebar-collapsed .profile-avatar img {
 
 .chip {
   position: absolute;
-  top: 666px;
+  top: 653px;
   height: 28px;
   display: inline-flex;
   align-items: center;
@@ -656,9 +656,9 @@ body.sidebar-collapsed .profile-avatar img {
 
 .composer {
   position: absolute;
-  left: 610px;
-  top: 701px;
-  width: 700px;
+  left: 452px;
+  top: 523px;
+  width: 440px;
   height: 120px;
   border-radius: 16px;
   background: rgba(0, 0, 0, .56);
@@ -670,7 +670,7 @@ body.sidebar-collapsed .profile-avatar img {
   position: absolute;
   left: 16px;
   top: 16px;
-  width: 520px;
+  width: 300px;
   height: 54px;
   resize: none;
   border: 0;
@@ -721,7 +721,7 @@ body.sidebar-collapsed .profile-avatar img {
 
 .create {
   position: absolute;
-  left: 606px;
+  left: 346px;
   top: 76px;
   width: 78px;
   height: 32px;
@@ -774,6 +774,70 @@ body.sidebar-collapsed .profile-avatar img {
 
 .create img {
   display: none;
+}
+
+.home-hero-title {
+  position: absolute;
+  left: 452px;
+  top: 225px;
+  width: 500px;
+  color: #c0f000;
+  font-family: "Bitcount Grid Single", "Bitcount Grid Single Ink", "Jersey 15", monospace;
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 52px;
+  letter-spacing: 1px;
+  word-wrap: break-word;
+}
+
+.home-hero-copy {
+  position: absolute;
+  left: 452px;
+  top: 345px;
+  width: 500px;
+  color: rgba(255, 255, 255, .6);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.home-cat {
+  position: absolute;
+  left: 452px;
+  top: 452px;
+  z-index: 3;
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+}
+
+.home-bubble {
+  position: absolute;
+  left: 548px;
+  top: 452px;
+  z-index: 2;
+  width: 304px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #f8edec;
+  box-shadow: 0 1.6px 0 #cfbbb9;
+  color: #58413f;
+  font-family: "Bitcount Grid Single", "Bitcount Grid Single Ink", "Courier New", monospace;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.home-bubble::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 30px;
+  width: 13px;
+  height: 8px;
+  background: #f8edec;
+  box-shadow: 0 1.6px 0 #cfbbb9;
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
 }
 
 .my-games-page {
@@ -2513,10 +2577,11 @@ body.detail-open {
 <div class="viewport">
   <main class="canvas" id="canvas">
     <picture>
-      <source srcset="assets/img_1_1920.webp" type="image/webp">
-      <img class="scene-bg" src="assets/img_1_1920.webp" alt="" fetchpriority="high" decoding="async">
+      <img class="scene-bg" src="assets/img_1.jpg" alt="" fetchpriority="high" decoding="async">
     </picture>
     <div class="top-gradient"></div>
+    <h1 class="home-hero-title">Welcome back,<br>Hongfei👋</h1>
+    <p class="home-hero-copy">Continue your creative journey where you left off orexplore new generative ideas today.</p>
     <div class="game-screen" aria-label="Game preview screen">
       <video id="screenMedia" src="2.mp4" poster="2.webp" muted loop autoplay playsinline preload="metadata"></video>
     </div>
@@ -2529,9 +2594,12 @@ body.detail-open {
     <button class="card" type="button" data-card="3" data-name="Planet Loot" data-video="3.mp4" data-poster="3.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="3.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
     <button class="card" type="button" data-card="4" data-name="Road Panic" data-video="4.mp4" data-poster="4.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="4.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
 
-    <button class="chip" style="left:611px" type="button">Switch to Cyberpunk Style</button>
-    <button class="chip" style="left:801px" type="button">Replace the protagonist with my cat</button>
-    <button class="chip" style="left:1052.5px" type="button">Increase fire rate</button>
+    <img class="home-cat" src="assets/wana.gif" alt="">
+    <div class="home-bubble">Try writing down your ideas now, and I’ll help you generate them~</div>
+
+    <button class="chip" style="left:453px" type="button">Switch to Cyberpunk Style</button>
+    <button class="chip" style="left:643px" type="button">Switch to Cyberpunk Style</button>
+    <button class="chip" style="left:453px; top:691px" type="button">Switch to Cyberpunk Style</button>
 
     <section class="composer" aria-label="Prompt composer">
       <textarea class="composer-input" id="promptInput" placeholder="Design a city builder" rows="2"></textarea>
@@ -2954,11 +3022,11 @@ let activeCard = 2;
 let isSidebarCollapsed = false;
 
 const cardSlots = {
-  "-2": { left: 512, top: 520, width: 149.2, height: 93.6, opacity: .62, z: 2 },
-  "-1": { left: 693.16, top: 520, width: 149.2, height: 93.6, opacity: .86, z: 3 },
-  "0": { left: 874.32, top: 508, width: 186.5, height: 117, opacity: 1, z: 4 },
-  "1": { left: 1092.76, top: 520, width: 149.2, height: 93.6, opacity: .86, z: 3 },
-  "2": { left: 1273.92, top: 520, width: 149.2, height: 93.6, opacity: .62, z: 2 }
+  "-2": { left: 900, top: 568.3, width: 119.33, height: 74.75, opacity: .62, z: 2 },
+  "-1": { left: 1044.93, top: 568.3, width: 119.33, height: 74.75, opacity: .86, z: 3 },
+  "0": { left: 1189.85, top: 558.7, width: 149.16, height: 93.44, opacity: 1, z: 4 },
+  "1": { left: 1364.61, top: 568.3, width: 119.33, height: 74.75, opacity: .86, z: 3 },
+  "2": { left: 1509.54, top: 568.3, width: 119.33, height: 74.75, opacity: .62, z: 2 }
 };
 
 function updateCarousel(nextActive) {
@@ -3195,7 +3263,7 @@ function fitCanvas() {
     const visualCenterX = 960;
     const left = (vw / 2) - (visualCenterX * scale);
     const top = 18;
-    const composerBottom = top + (701 + 120) * scale;
+    const composerBottom = top + (523 + 120) * scale;
     const feedTop = Math.ceil(composerBottom + 28);
     const viewportHeight = Math.max(1180, feedTop + 690);
 
