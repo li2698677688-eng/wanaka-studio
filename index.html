@@ -191,8 +191,39 @@ body.model .my-games-page {
 }
 
 .game-tile {
+  position: relative;
   width: 233px;
   flex: 0 0 233px;
+  z-index: 0;
+  border-radius: 12px;
+  transition: transform .18s ease, z-index .18s ease;
+}
+
+.game-tile::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  z-index: -1;
+  width: 249px;
+  height: 278px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .08);
+  opacity: 0;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: opacity .18s ease;
+  pointer-events: none;
+}
+
+.game-tile:hover,
+.game-tile:focus-within {
+  z-index: 4;
+}
+
+.game-tile:hover::before,
+.game-tile:focus-within::before {
+  opacity: 1;
 }
 
 .black-cartridge {
@@ -262,6 +293,47 @@ body.model .my-games-page {
   font-size: 12px;
   font-weight: 500;
   line-height: 18px;
+}
+
+.tile-actions {
+  position: absolute;
+  left: 0;
+  top: 215px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .18s ease, transform .18s ease;
+  pointer-events: none;
+}
+
+.game-tile:hover .tile-actions,
+.game-tile:focus-within .tile-actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.tile-action {
+  width: 112px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.tile-action.play {
+  color: #313d00;
+  background: #c0f000;
+  box-shadow: 0 3px 0 #a6d900;
+}
+
+.tile-action.remix {
+  color: #222;
+  background: #fff;
+  box-shadow: 0 3px 0 #e5e5e5;
 }
 
 .hot {
@@ -2363,6 +2435,11 @@ body.detail-open {
     line-height: 16px;
   }
 
+  .game-tile::before,
+  .tile-actions {
+    display: none;
+  }
+
   .my-games-page,
   .model-page {
     margin-left: 0;
@@ -3409,6 +3486,26 @@ function setupRiggingInteractions() {
   });
 }
 
+function setupGameTileActions() {
+  document.querySelectorAll(".game-tile").forEach((tile) => {
+    if (tile.querySelector(".tile-actions")) return;
+    const actions = document.createElement("div");
+    actions.className = "tile-actions";
+    actions.innerHTML = `
+      <button class="tile-action play" type="button">Play</button>
+      <button class="tile-action remix" type="button">Remix</button>
+    `;
+    actions.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        button.blur();
+      });
+    });
+    tile.appendChild(actions);
+  });
+}
+
 if (sidebarLogo) {
   sidebarLogo.setAttribute("aria-label", "Expand sidebar");
   sidebarLogo.addEventListener("click", () => {
@@ -3419,6 +3516,7 @@ filterGroups.forEach(setupFilterGroup);
 setupModelTabs();
 setupModelOptions();
 setupRiggingInteractions();
+setupGameTileActions();
 modelPrompt?.addEventListener("input", updateModelPromptState);
 updateModelPromptState();
 promptInput.addEventListener("input", updatePromptState);
