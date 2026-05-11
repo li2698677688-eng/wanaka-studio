@@ -2064,6 +2064,7 @@ body.sidebar-collapsed.model-rigging .rigging-player {
 
 .game-detail.is-open {
   display: block;
+  animation: detailOverlayIn .22s ease-out both;
 }
 
 .game-detail-panel {
@@ -2079,9 +2080,37 @@ body.sidebar-collapsed.model-rigging .rigging-player {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
-  background: #150c0a;
+  background:
+    url("assets/detail-mask.png") top center / 100% auto no-repeat,
+    #150c0a;
   border-radius: 24px 24px 0 0;
   color: #fff;
+}
+
+.game-detail.is-open .game-detail-panel {
+  animation: detailSheetIn .34s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes detailOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes detailSheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(64px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .game-detail-panel > :not(.detail-close) {
