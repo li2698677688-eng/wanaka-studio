@@ -3056,6 +3056,9 @@ const modelComposer = document.querySelector(".model-composer");
 const modelPrompt = document.getElementById("modelPrompt");
 const modelSend = document.querySelector(".model-send");
 const modelOptions = Array.from(document.querySelectorAll(".model-option"));
+const riggingActionGroups = Array.from(document.querySelectorAll(".rigging-section"));
+const animationCards = Array.from(document.querySelectorAll(".animation-card"));
+const riggingPlayerButtons = Array.from(document.querySelectorAll(".rigging-player button"));
 const hydratedViews = new Set(["home"]);
 let activeCard = 2;
 let isSidebarCollapsed = false;
@@ -3377,6 +3380,35 @@ if (collapseToggle) {
     }
   });
 }
+
+function setupSingleSelectButtons(buttons, selectedClass = "is-selected") {
+  buttons.forEach((button) => {
+    button.setAttribute("aria-pressed", button.classList.contains(selectedClass) ? "true" : "false");
+    button.addEventListener("click", () => {
+      buttons.forEach((item) => {
+        item.classList.remove(selectedClass);
+        item.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(selectedClass);
+      button.setAttribute("aria-pressed", "true");
+      button.blur();
+    });
+  });
+}
+
+function setupRiggingInteractions() {
+  riggingActionGroups.forEach((group) => {
+    const actions = Array.from(group.querySelectorAll(".rigging-action"));
+    if (actions.length > 1) setupSingleSelectButtons(actions);
+  });
+  setupSingleSelectButtons(animationCards);
+  setupSingleSelectButtons(riggingPlayerButtons.filter((button) => !button.classList.contains("play")));
+  riggingPlayerButtons.find((button) => button.classList.contains("play"))?.addEventListener("click", (event) => {
+    event.currentTarget.classList.toggle("is-playing");
+    event.currentTarget.blur();
+  });
+}
+
 if (sidebarLogo) {
   sidebarLogo.setAttribute("aria-label", "Expand sidebar");
   sidebarLogo.addEventListener("click", () => {
@@ -3386,6 +3418,7 @@ if (sidebarLogo) {
 filterGroups.forEach(setupFilterGroup);
 setupModelTabs();
 setupModelOptions();
+setupRiggingInteractions();
 modelPrompt?.addEventListener("input", updateModelPromptState);
 updateModelPromptState();
 promptInput.addEventListener("input", updatePromptState);
