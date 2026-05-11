@@ -132,11 +132,11 @@ body.model .my-games-page {
 }
 
 .feed {
+  --feed-max-width: 1760px;
   position: absolute;
-  left: var(--sidebar-width, 160px);
+  left: calc(var(--sidebar-width, 160px) + max(0px, calc((100vw - var(--sidebar-width, 160px) - var(--feed-max-width)) / 2)));
   top: var(--feed-top, 760px);
-  width: calc(100vw - var(--sidebar-width, 160px));
-  max-width: 1760px;
+  width: min(calc(100vw - var(--sidebar-width, 160px)), var(--feed-max-width));
   min-height: 740px;
   padding: 20px 40px;
   background: #150c0a;
