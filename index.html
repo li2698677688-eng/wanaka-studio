@@ -219,6 +219,19 @@ body.model .my-games-page {
   pointer-events: none;
 }
 
+.game-tile::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  z-index: 0;
+  width: 249px;
+  height: 278px;
+  border-radius: 12px;
+  opacity: 0;
+  pointer-events: auto;
+}
+
 .game-tile:hover,
 .game-tile:focus-within {
   z-index: 100;
