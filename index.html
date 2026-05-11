@@ -620,6 +620,51 @@ body.sidebar-collapsed .profile-avatar img {
   pointer-events: none;
 }
 
+.screen-actions {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(-50%);
+}
+
+.screen-action {
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 8px;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 12px;
+}
+
+.screen-action img {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.screen-action.play {
+  width: 67px;
+  color: #313d00;
+  background: #c0f000;
+  box-shadow: 0 2px 0 #a6d900;
+}
+
+.screen-action.remix {
+  width: 78px;
+  color: #222;
+  background: #fff;
+  box-shadow: 0 2px 0 #e5e5e5;
+}
+
 .game-name-display {
   position: absolute;
   left: 1268.4px;
@@ -2744,6 +2789,10 @@ body.detail-open .game-tile .tile-actions {
     <p class="home-hero-copy">Continue your creative journey where you left off orexplore new generative ideas today.</p>
     <div class="game-screen" aria-label="Game preview screen">
       <video id="screenMedia" src="2.mp4" poster="2.webp" muted loop autoplay playsinline preload="metadata"></video>
+      <div class="screen-actions" aria-label="Game actions">
+        <button class="screen-action play" type="button"><img src="assets/icon_play.png" alt="">Play</button>
+        <button class="screen-action remix" type="button"><img src="assets/icon_remix2.png" alt="">Remix</button>
+      </div>
     </div>
     <div class="game-name-display" id="gameNameDisplay">Paw Dash</div>
 
@@ -3156,6 +3205,7 @@ const navModel = document.querySelector('[data-view="model"]');
 const screenMedia = document.getElementById("screenMedia");
 const gameNameDisplay = document.getElementById("gameNameDisplay");
 const carouselCards = Array.from(document.querySelectorAll(".card[data-card]"));
+const screenActionButtons = Array.from(document.querySelectorAll(".screen-action"));
 const composer = document.querySelector(".composer");
 const promptInput = document.getElementById("promptInput");
 const promptChips = Array.from(document.querySelectorAll(".chip"));
@@ -3582,6 +3632,13 @@ carouselCards.forEach((card, index) => {
     updateCarousel(index);
     card.blur();
     window.scrollTo(scrollX, scrollY);
+  });
+});
+screenActionButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    button.blur();
   });
 });
 document.querySelectorAll(".game-tile").forEach((tile) => {
