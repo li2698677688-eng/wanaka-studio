@@ -609,8 +609,8 @@ body.sidebar-collapsed .profile-avatar img {
   background: #101c1b;
 }
 
-.game-screen img,
-.game-screen video {
+.game-screen > img,
+.game-screen > video {
   width: 100%;
   height: 100%;
   display: block;
@@ -660,16 +660,18 @@ body.sidebar-collapsed .profile-avatar img {
   object-fit: contain;
   flex: 0 0 auto;
   display: block;
+  animation: none;
+  transform: none;
 }
 
 .screen-action.play img {
-  transform: translateY(.5px);
+  transform: none;
 }
 
 .screen-action.remix img {
   width: 13px;
   height: 13px;
-  transform: translateY(.5px);
+  transform: none;
 }
 
 .screen-action.play {
