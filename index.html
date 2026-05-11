@@ -908,6 +908,7 @@ body.my-games .my-games-page {
 }
 
 .my-games-top {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -926,10 +927,13 @@ body.my-games .my-games-page {
 }
 
 .my-games-actions {
+  position: absolute;
+  top: -44px;
+  right: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 42px;
+  gap: 14px;
 }
 
 .search-pill {
@@ -2358,6 +2362,7 @@ body.detail-open {
   }
 
   .my-games-actions {
+    position: static;
     width: 100%;
     flex-direction: row;
     align-items: center;
