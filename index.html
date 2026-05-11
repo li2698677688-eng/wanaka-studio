@@ -140,12 +140,14 @@ body.model .my-games-page {
   min-height: 740px;
   padding: 20px 40px;
   background: #150c0a;
+  overflow: visible;
 }
 
 .feed-section {
   width: 100%;
-  content-visibility: auto;
-  contain-intrinsic-size: 240px;
+  overflow: visible;
+  content-visibility: visible;
+  contain: none;
 }
 
 .feed-section + .feed-section {
@@ -188,11 +190,13 @@ body.model .my-games-page {
   gap: 24px;
   flex-wrap: wrap;
   margin-top: 24px;
+  overflow: visible;
 }
 
 .game-tile {
   position: relative;
   width: 233px;
+  min-height: 263px;
   flex: 0 0 233px;
   z-index: 0;
   border-radius: 12px;
@@ -218,7 +222,7 @@ body.model .my-games-page {
 
 .game-tile:hover,
 .game-tile:focus-within {
-  z-index: 4;
+  z-index: 100;
 }
 
 .game-tile:hover::before,
@@ -228,6 +232,7 @@ body.model .my-games-page {
 
 .black-cartridge {
   position: relative;
+  z-index: 1;
   width: 233px;
   height: 146px;
 }
@@ -274,6 +279,8 @@ body.model .my-games-page {
 }
 
 .tile-meta {
+  position: relative;
+  z-index: 1;
   margin-top: 12px;
 }
 
@@ -299,6 +306,7 @@ body.model .my-games-page {
   position: absolute;
   left: 0;
   top: 215px;
+  z-index: 3;
   display: flex;
   align-items: center;
   gap: 9px;
@@ -1144,6 +1152,7 @@ body.my-games .my-games-page {
   gap: 24px;
   margin-top: 26px;
   max-width: 1666px;
+  overflow: visible;
 }
 
 .my-games-grid .game-tile {
@@ -2397,6 +2406,7 @@ body.detail-open {
   .game-tile,
   .my-games-grid .game-tile {
     width: 100%;
+    min-height: 0;
     min-width: 0;
     flex: none;
     margin-bottom: 0;
