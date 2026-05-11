@@ -781,13 +781,23 @@ body.sidebar-collapsed .profile-avatar img {
   left: 452px;
   top: 225px;
   width: 500px;
-  color: #C0F000;
-  font-family: "Jersey 15", "Courier New", monospace;
+  color: #fff;
+  font-family: "Bitcount Grid Single", "Bitcount Grid Single Ink", "Jersey 15", monospace;
   font-size: 52px;
   font-weight: 400;
   line-height: 52px;
   letter-spacing: 1px;
   word-wrap: break-word;
+}
+
+.home-title-ink {
+  display: inline-block;
+  filter: brightness(0) saturate(100%) invert(83%) sepia(97%) saturate(1459%) hue-rotate(20deg) brightness(102%) contrast(102%);
+}
+
+.home-title-emoji {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  filter: none;
 }
 
 .home-hero-copy {
@@ -821,11 +831,16 @@ body.sidebar-collapsed .profile-avatar img {
   border-radius: 12px;
   background: #f8edec;
   box-shadow: 0 1.6px 0 #cfbbb9;
-  color: #58413F;
-  font-family: "Courier New", monospace;
+  color: #fff;
+  font-family: "Bitcount Grid Single", "Bitcount Grid Single Ink", "Courier New", monospace;
   font-size: 14px;
   font-weight: 500;
   line-height: 18px;
+}
+
+.home-bubble-ink {
+  display: inline-block;
+  filter: brightness(0) saturate(100%) invert(25%) sepia(12%) saturate(887%) hue-rotate(318deg) brightness(91%) contrast(86%);
 }
 
 .home-bubble::before {
@@ -2580,7 +2595,7 @@ body.detail-open {
       <img class="scene-bg" src="assets/img_1.jpg" alt="" fetchpriority="high" decoding="async">
     </picture>
     <div class="top-gradient"></div>
-    <h1 class="home-hero-title">Welcome back,<br>Hongfei👋</h1>
+    <h1 class="home-hero-title"><span class="home-title-ink">Welcome back,</span><br><span class="home-title-ink">Hongfei</span><span class="home-title-emoji">👋</span></h1>
     <p class="home-hero-copy">Continue your creative journey where you left off orexplore new generative ideas today.</p>
     <div class="game-screen" aria-label="Game preview screen">
       <video id="screenMedia" src="2.mp4" poster="2.webp" muted loop autoplay playsinline preload="metadata"></video>
@@ -2595,7 +2610,7 @@ body.detail-open {
     <button class="card" type="button" data-card="4" data-name="Road Panic" data-video="4.mp4" data-poster="4.webp"><img class="card-frame" src="assets/img_kadai.webp" alt="" decoding="async"><img class="card-cover" src="4.webp" alt="" loading="lazy" decoding="async"><span class="card-title">·Game Cartridge</span></button>
 
     <img class="home-cat" src="assets/wana.gif" alt="">
-    <div class="home-bubble">Try writing down your ideas now, and I’ll help you generate them~</div>
+    <div class="home-bubble"><span class="home-bubble-ink">Try writing down your ideas now, and I’ll help you generate them~</span></div>
 
     <button class="chip" style="left:453px" type="button">Switch to Cyberpunk Style</button>
     <button class="chip" style="left:643px" type="button">Switch to Cyberpunk Style</button>
