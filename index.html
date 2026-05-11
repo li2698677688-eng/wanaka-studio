@@ -2256,6 +2256,16 @@ body.detail-open {
   overflow: hidden;
 }
 
+body.detail-open .game-tile {
+  pointer-events: none;
+}
+
+body.detail-open .game-tile::before,
+body.detail-open .game-tile::after,
+body.detail-open .game-tile .tile-actions {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .my-games-page {
     padding-right: 24px;
