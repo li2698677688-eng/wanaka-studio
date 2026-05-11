@@ -1098,7 +1098,7 @@ body.model.model-rigging .viewport {
 
 body.model.model-rigging .model-page {
   min-height: 100vh;
-  padding: 24px 300px 24px 300px;
+  padding: 24px 260px 24px 260px;
   overflow: hidden;
 }
 
@@ -1526,12 +1526,20 @@ body.model .model-page {
 }
 
 .rigging-left {
-  left: var(--sidebar-width, 160px);
+  left: 160px;
 }
 
 .rigging-right {
   right: 0;
   box-shadow: inset 1px 0 0 rgba(255, 255, 255, .12);
+}
+
+body.sidebar-collapsed.model-rigging .rigging-left {
+  left: 68px;
+}
+
+body.sidebar-collapsed.model-rigging .rigging-player {
+  left: calc(68px + 260px + ((100vw - 68px - 260px - 260px) / 2));
 }
 
 .rigging-section {
@@ -1839,9 +1847,10 @@ body.model .model-page {
 
 .rigging-player {
   position: fixed;
-  left: calc((100vw + var(--sidebar-width, 160px)) / 2);
+  left: calc(160px + 260px + ((100vw - 160px - 260px - 260px) / 2));
   bottom: 28px;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(.8);
+  transform-origin: center bottom;
   height: 66px;
   display: flex;
   align-items: center;
